@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; overflow: hidden; background: transparent; }
+    .layer {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+    }
+    #c1 { filter: blur(4px); }
+    #c2 { filter: blur(9px); }
+    #c3 { filter: blur(28px); }
+    #root {
+      opacity: 0;
+      transition: opacity 0.4s ease-in-out;
+    }
+    #root.visible { opacity: 1; }
+  </style>
+</head>
+<body>
+  <div id="root">
+    <canvas id="c1" class="layer"></canvas>
+    <canvas id="c2" class="layer"></canvas>
+    <canvas id="c3" class="layer"></canvas>
+  </div>
+
+  <script>
+    // The BrowserWindow extends OV CSS pixels beyond each screen edge (set in windowManager.js).
+    // The screen edge is therefore OV*dpr physical pixels inward from the canvas edge.
+    // We draw the rect path exactly there: stroke straddles the screen edge, inner half glows
+    // inward, outer half is off-screen. r=0 so the MacBook Pro bezel clips the corners naturally.
+    const OV  = 80; // must match windowManager.js
+    const DPR = window.devicePixelRatio || 2;
+
+    // Use screen dimensions directly — avoids macOS clipping window.innerWidth
+    // to the visible area when the window extends off-screen.
+    const SCREEN_W = window.screen.width;
+    const SCREEN_H = window.screen.height;
+    const CANVAS_W = Math.round((SCREEN_W + OV * 2) * DPR);
+    const CANVAS_H = Math.round((SCREEN_H + OV * 2) * DPR);
+    const INSET    = Math.round(OV * DPR); // physical px from canvas edge to screen edge
+
+    const root = document.getElementById('root');
+    const canvases = [
+      { el: document.getElementById('c1'), lineWidth: 36, opacity: () => 0.70 + 0.15 * Math.sin(phase * 1.1 + Math.PI / 4) },
+      { el: document.getElementById('c2'), lineWidth: 36, opacity: () => 0.32 + 0.10 * Math.sin(phase * 0.9 + Math.PI / 3) },
+      { el: document.getElementById('c3'), lineWidth: 100, opacity: () => 0.16 + 0.06 * Math.sin(phase * 0.7) },
+    ];
+
+    let phase = 0, rafId = null, startTime = null;
+
+    function resize() {
+      for (const c of canvases) {
+        c.el.width  = CANVAS_W;
+        c.el.height = CANVAS_H;
+        c.el.style.width  = (SCREEN_W + OV * 2) + 'px';
+        c.el.style.height = (SCREEN_H + OV * 2) + 'px';
+      }
+    }
+
+    function frame(ts) {
+      if (!startTime) startTime = ts;
+      phase = (ts - startTime) * 0.00025;
+
+      const cx = CANVAS_W / 2;
+      const cy = CANVAS_H / 2;
+
+      const hues = [];
+      for (let i = 0; i < 7; i++) {
+        const base = i / 6;
+        const hue  = ((base + Math.sin(phase * 0.9 + base * Math.PI * 2) * 0.08 + 1) % 1) * 360;
+        const sat  = Math.round((0.8 + 0.15 * Math.sin(phase * 0.7 + base * Math.PI)) * 100);
+        hues.push({ hue, sat });
+      }
+      const angleRad = (Math.sin(phase * 1.2) * 120 + 180) * (Math.PI / 180);
+
+      const rectW = SCREEN_W * DPR;
+      const rectH = SCREEN_H * DPR;
+
+      for (const c of canvases) {
+        const ctx = c.el.getContext('2d');
+        ctx.clearRect(0, 0, CANVAS_W, CANVAS_H);
+
+        const grad = ctx.createConicGradient(angleRad, cx, cy);
+        for (let i = 0; i <= 7; i++) {
+          const { hue, sat } = hues[i % 7];
+          grad.addColorStop(i / 7, `hsl(${hue}, ${sat}%, 58%)`);
+        }
+
+        // Stroke centered exactly on the screen boundary (INSET px from canvas edge).
+        // r=0: sharp rect corners that the physical MacBook bezel rounds naturally.
+        ctx.beginPath();
+        ctx.rect(INSET, INSET, rectW, rectH);
+        ctx.strokeStyle = grad;
+        ctx.lineWidth   = c.lineWidth;
+        ctx.globalAlpha = c.opacity();
+        ctx.stroke();
+      }
+
+      rafId = requestAnimationFrame(frame);
+    }
+
+    function startAnimation() {
+      if (rafId) return;
+      startTime = null;
+      rafId = requestAnimationFrame(frame);
+    }
+
+    function stopAnimation() {
+      if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+    }
+
+    resize();
+
+    if (window.electronAPI) {
+      window.electronAPI.onScreenGlowShow?.(() => {
+        startAnimation();
+        root.classList.add('visible');
+      });
+      window.electronAPI.onScreenGlowHide?.(() => {
+        root.classList.remove('visible');
+        setTimeout(stopAnimation, 450);
+      });
+    }
+  </script>
+</body>
+</html>
