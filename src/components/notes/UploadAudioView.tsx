@@ -114,11 +114,11 @@ export default function UploadAudioView({ onNoteCreated, onOpenSettings }: Uploa
   );
   const useCleanupModel = useSettingsStore((s) => s.useCleanupModel);
 
-  const isApple IntelligenceCloud =
+  const isOpenWhisprCloud =
     isSignedIn && cloudTranscriptionMode === "openwhispr" && !useLocalWhisper;
 
   // Mode detection
-  const isByok = !useLocalWhisper && !isApple IntelligenceCloud;
+  const isByok = !useLocalWhisper && !isOpenWhisprCloud;
 
   // Mode-aware file size validation
   // Local: no limits at all
@@ -166,7 +166,7 @@ export default function UploadAudioView({ onNoteCreated, onOpenSettings }: Uploa
   useEffect(() => {
     let cancelled = false;
     const checkProviderReady = async () => {
-      if (isApple IntelligenceCloud) {
+      if (isOpenWhisprCloud) {
         setProviderReady(true);
         return;
       }
@@ -210,7 +210,7 @@ export default function UploadAudioView({ onNoteCreated, onOpenSettings }: Uploa
       cancelled = true;
     };
   }, [
-    isApple IntelligenceCloud,
+    isOpenWhisprCloud,
     useLocalWhisper,
     localTranscriptionProvider,
     cloudTranscriptionProvider,
@@ -225,7 +225,7 @@ export default function UploadAudioView({ onNoteCreated, onOpenSettings }: Uploa
   ]);
 
   const getActiveModelLabel = (): string => {
-    if (isApple IntelligenceCloud) return t("notes.upload.apple-intelligenceCloud");
+    if (isOpenWhisprCloud) return t("notes.upload.apple-intelligenceCloud");
     if (useLocalWhisper) {
       if (localTranscriptionProvider === "nvidia")
         return `Parakeet · ${parakeetModel || "default"}`;
@@ -322,7 +322,7 @@ export default function UploadAudioView({ onNoteCreated, onOpenSettings }: Uploa
     setProgress(0);
     setChunkProgress(null);
 
-    const useChunkProgress = isApple IntelligenceCloud && isLargeFile;
+    const useChunkProgress = isOpenWhisprCloud && isLargeFile;
 
     if (useChunkProgress) {
       progressCleanupRef.current =
@@ -350,7 +350,7 @@ export default function UploadAudioView({ onNoteCreated, onOpenSettings }: Uploa
     try {
       let res: { success: boolean; text?: string; error?: string; code?: string };
 
-      if (isApple IntelligenceCloud) {
+      if (isOpenWhisprCloud) {
         res = await withSessionRefresh(async () => {
           const r = await window.electronAPI.transcribeAudioFileCloud!(file.path);
           if (!r.success && r.code) {
@@ -464,7 +464,7 @@ export default function UploadAudioView({ onNoteCreated, onOpenSettings }: Uploa
   };
 
   const getTranscribingLabel = (): string => {
-    if (isApple IntelligenceCloud) return t("notes.upload.transcribingCloud");
+    if (isOpenWhisprCloud) return t("notes.upload.transcribingCloud");
     if (useLocalWhisper) return t("notes.upload.transcribingLocal");
     return t("notes.upload.transcribingProvider", { provider: cloudTranscriptionProvider });
   };
@@ -501,7 +501,7 @@ export default function UploadAudioView({ onNoteCreated, onOpenSettings }: Uploa
               requiresUpgrade={!!requiresUpgrade}
               fileTooLarge={fileTooLarge}
               isLargeFile={isLargeFile}
-              isApple IntelligenceCloud={isApple IntelligenceCloud}
+              isOpenWhisprCloud={isOpenWhisprCloud}
               byokTooLarge={byokTooLarge}
               requiresAccount={requiresAccount}
               isProUser={!!isProUser}
@@ -742,7 +742,7 @@ interface SelectedViewProps {
   requiresUpgrade: boolean;
   fileTooLarge: boolean;
   isLargeFile: boolean;
-  isApple IntelligenceCloud: boolean;
+  isOpenWhisprCloud: boolean;
   byokTooLarge: boolean;
   requiresAccount: boolean;
   isProUser: boolean;
@@ -760,7 +760,7 @@ function SelectedView({
   requiresUpgrade,
   fileTooLarge,
   isLargeFile,
-  isApple IntelligenceCloud,
+  isOpenWhisprCloud,
   byokTooLarge,
   requiresAccount,
   isProUser,
@@ -829,7 +829,7 @@ function SelectedView({
       )}
 
       {/* Cloud large file info (Pro user, will be chunked) */}
-      {isLargeFile && !requiresUpgrade && !fileTooLarge && isApple IntelligenceCloud && (
+      {isLargeFile && !requiresUpgrade && !fileTooLarge && isOpenWhisprCloud && (
         <p className="text-xs text-foreground/20 text-center mb-3">
           {t("notes.upload.largeFileNote")}
         </p>
