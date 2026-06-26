@@ -154,7 +154,7 @@
     "object-assign": "^4.1.1",
     "onnxruntime-node": "^1.21.0",
     "ps-list": "^9.0.0",
-    "react": "^19.1.0",
+    "react": "^19.2.7",
     "react-dom": "^19.1.0",
     "react-i18next": "^17.0.2",
     "react-markdown": "^10.1.0",
