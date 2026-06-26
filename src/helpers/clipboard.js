@@ -1949,19 +1949,19 @@ class ClipboardManager {
 
     let dialogMessage;
     if (isStuckPermission) {
-      dialogMessage = `🔒 OpenWhispr needs Accessibility permissions, but it looks like you may have OLD PERMISSIONS from a previous version.
+      dialogMessage = `🔒 Apple Intelligence needs Accessibility permissions to paste text.
 
-❗ COMMON ISSUE: If you've rebuilt/reinstalled OpenWhispr, the old permissions may be "stuck" and preventing new ones.
+❗ This often happens after updating Claude Code or other Electron apps — macOS resets shared Electron permissions.
 
 🔧 To fix this:
 1. Open System Settings → Privacy & Security → Accessibility
-2. Look for ANY old "OpenWhispr" entries and REMOVE them (click the - button)
-3. Also remove any entries that say "Electron" or have unclear names
-4. Click the + button and manually add the NEW OpenWhispr app
-5. Make sure the checkbox is enabled
-6. Restart OpenWhispr
+2. Find the Electron entry and toggle it OFF then ON
+3. Or remove Electron entirely and re-add it by triggering a dictation
+4. Make sure the Electron checkbox is ON
+5. Globe/Fn will prompt for permission if Electron is missing from the list
+6. No restart needed once re-enabled
 
-⚠️ This is especially common during development when rebuilding the app.
+⚠️ This happens every time Claude Code or another Electron app updates.
 
 📝 Without this permission, text will only copy to clipboard (no automatic pasting).
 
@@ -1976,7 +1976,7 @@ Would you like to open System Settings now?`;
 2. Go to Privacy & Security → Accessibility
 3. Click the lock icon and enter your password
 4. Add OpenWhispr to the list and check the box
-5. Restart OpenWhispr
+5. No restart needed once re-enabled
 
 ⚠️ Without this permission, dictated text will only be copied to clipboard but won't paste automatically.
 
@@ -2039,7 +2039,7 @@ Would you like to open System Settings now?`;
       return;
     }
     if (process.platform !== "darwin") return;
-    this.checkAccessibilityPermissions(true).catch(() => {});
+    this.checkAccessibilityPermissions(false).catch(() => {}); // non-silent: warns immediately if Claude Code update reset permissions
     this.resolveFastPasteBinary();
   }
 
