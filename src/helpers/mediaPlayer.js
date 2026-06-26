@@ -13,7 +13,8 @@ class MediaPlayer {
     this._macBinaryPath = null;
     this._pausedPlayers = []; // MPRIS players we paused (Linux)
     this._didPause = false; // Whether we sent a pause via toggle fallback
-    this._pausedMacApp = null; // Which app we paused on macOS
+    this._pausedMacApp = null;     // Which media app we paused on macOS
+    this._pausedBrowser = null;   // Which browser we injected JS into
     this._pausedWinApps = []; // GSMTC app IDs we paused (Windows)
   }
 
@@ -335,16 +336,29 @@ class MediaPlayer {
 
   // --- macOS: MediaRemote-aware pause/resume ---
 
-  // Music apps to target directly, in priority order
+  // Dedicated media apps targeted via AppleScript player state
   _macMusicApps() {
-    return ["Spotify", "Music", "Deezer", "Tidal", "Vox", "Doppler", "Capo"];
+    return ["Spotify", "Music", "Deezer", "Tidal", "Vox", "Doppler", "Capo",
+            "Podcasts", "Overcast", "Pocket Casts", "Castro"];
+  }
+
+  // Apps where we pause all HTML5 audio/video via JS injection
+  _macBrowserApps() {
+    return ["Google Chrome", "Safari", "Firefox", "Arc", "Brave Browser",
+            "Microsoft Edge", "Opera", "Vivaldi"];
+  }
+
+  // Apps paused via play/pause keystroke (no state awareness)
+  _macKeystrokeApps() {
+    return ["VLC", "IINA", "QuickTime Player", "Infuse", "Elmedia Player"];
   }
 
   _pauseMacOS() {
     this._didPause = false;
     this._pausedMacApp = null;
+    this._pausedBrowser = null;
 
-    // 1. Direct AppleScript — most reliable on macOS 26, works regardless of focus
+    // 1. Dedicated media apps (Spotify, Music, Podcasts, etc.)
     for (const app of this._macMusicApps()) {
       const script = `
         if application "${app}" is running then
@@ -367,17 +381,51 @@ class MediaPlayer {
       }
     }
 
-    // 2. MediaRemote binary fallback
-    const binary = this._resolveMacMediaRemote();
-    if (binary) {
-      const result = spawnSync(binary, ["--pause"], { stdio: "pipe", timeout: 3000 });
-      if (result.status === 0) {
-        debugLogger.debug("Media paused via MediaRemote", {}, "media");
+    // 2. Browsers — pause all HTML5 audio/video via JS injection
+    for (const app of this._macBrowserApps()) {
+      const script = `
+        if application "${app}" is running then
+          tell application "${app}"
+            set wasPaused to false
+            try
+              set tab to active tab of front window
+              set js to "(() => { let paused = false; document.querySelectorAll('video,audio').forEach(m => { if(!m.paused){ m.pause(); paused=true; } }); return paused ? 'OK' : 'SKIP'; })()"
+              set r to execute tab javascript js
+              if r is "OK" then set wasPaused to true
+            end try
+            if wasPaused then return "OK"
+          end tell
+        end if
+        return "SKIP"
+      `;
+      const result = spawnSync("osascript", ["-e", script], { stdio: "pipe", timeout: 4000 });
+      const out = (result.stdout?.toString() || "").trim();
+      if (result.status === 0 && out === "OK") {
+        debugLogger.debug("Media paused via browser JS injection", { app }, "media");
         this._didPause = true;
+        this._pausedBrowser = app;
         return true;
       }
-      const output = (result.stdout?.toString() || "").trim();
-      if (output === "NOT_PLAYING") return false;
+    }
+
+    // 3. Video players — send space bar to toggle
+    for (const app of this._macKeystrokeApps()) {
+      const script = `
+        if application "${app}" is running then
+          tell application "${app}" to activate
+          tell application "System Events" to keystroke " "
+          return "OK"
+        end if
+        return "SKIP"
+      `;
+      const result = spawnSync("osascript", ["-e", script], { stdio: "pipe", timeout: 3000 });
+      const out = (result.stdout?.toString() || "").trim();
+      if (result.status === 0 && out === "OK") {
+        debugLogger.debug("Media toggled via keystroke", { app }, "media");
+        this._didPause = true;
+        this._pausedMacApp = app;
+        return true;
+      }
     }
 
     return false;
@@ -387,15 +435,19 @@ class MediaPlayer {
     if (!this._didPause) return false;
     this._didPause = false;
 
-    // Resume the specific app we paused
+    // Resume the specific media app we paused
     if (this._pausedMacApp) {
       const app = this._pausedMacApp;
       this._pausedMacApp = null;
-      const script = `
-        if application "${app}" is running then
-          tell application "${app}" to play
-        end if
-      `;
+      const isKeystrokeApp = this._macKeystrokeApps().includes(app);
+      const script = isKeystrokeApp
+        ? `if application "${app}" is running then
+             tell application "${app}" to activate
+             tell application "System Events" to keystroke " "
+           end if`
+        : `if application "${app}" is running then
+             tell application "${app}" to play
+           end if`;
       const result = spawnSync("osascript", ["-e", script], { stdio: "pipe", timeout: 3000 });
       if (result.status === 0) {
         debugLogger.debug("Media resumed via AppleScript", { app }, "media");
@@ -403,14 +455,20 @@ class MediaPlayer {
       }
     }
 
-    // MediaRemote fallback
-    const binary = this._resolveMacMediaRemote();
-    if (binary) {
-      const result = spawnSync(binary, ["--play"], { stdio: "pipe", timeout: 3000 });
-      if (result.status === 0) {
-        debugLogger.debug("Media resumed via MediaRemote", {}, "media");
-        return true;
-      }
+    // Resume browser audio
+    if (this._pausedBrowser) {
+      const app = this._pausedBrowser;
+      this._pausedBrowser = null;
+      const script = `
+        if application "${app}" is running then
+          tell application "${app}"
+            set tab to active tab of front window
+            execute tab javascript "document.querySelectorAll('video,audio').forEach(m => m.play())"
+          end tell
+        end if
+      `;
+      spawnSync("osascript", ["-e", script], { stdio: "pipe", timeout: 3000 });
+      return true;
     }
 
     return false;
