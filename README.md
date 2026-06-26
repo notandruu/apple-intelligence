@@ -56,6 +56,14 @@ The dictation button uses the layered stroke + blur technique from [Livsy90/Inte
 
 Default: **Globe / Fn**. Change in Settings → Hotkeys.
 
+## Credits
+
+Built on top of [OpenWhispr](https://github.com/notandruu/openwhispr) — the open-source Electron dictation app that provides the core audio pipeline, transcription engine, IPC architecture, and settings system this project is built on.
+
+Additional credits:
+- [metasidd/Prototype-Siri-Screen-Animation](https://github.com/metasidd/Prototype-Siri-Screen-Animation) — Metal screen glow shader
+- [Livsy90/IntelligenceGlow](https://github.com/Livsy90/IntelligenceGlow) — Intelligence ring effect
+
 ## License
 
 MIT
