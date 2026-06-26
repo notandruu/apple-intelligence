@@ -753,6 +753,10 @@ contextBridge.exposeInMainWorld("electronAPI", {
   dismissDictationPreview: () => ipcRenderer.invoke("dismiss-dictation-preview"),
   completeDictationPreview: (payload) => ipcRenderer.invoke("complete-dictation-preview", payload),
   hideDictationPreview: () => ipcRenderer.invoke("hide-dictation-preview"),
+  showScreenGlow: () => ipcRenderer.invoke("show-screen-glow"),
+  hideScreenGlow: () => ipcRenderer.invoke("hide-screen-glow"),
+  onScreenGlowShow: registerListener("screen-glow-show", (callback) => () => callback()),
+  onScreenGlowHide: registerListener("screen-glow-hide", (callback) => () => callback()),
   resizeTranscriptionPreviewWindow: (width, height) =>
     ipcRenderer.invoke("resize-transcription-preview-window", width, height),
   sendDictationPreviewAudio: (data) => ipcRenderer.send("dictation-preview-audio", data),

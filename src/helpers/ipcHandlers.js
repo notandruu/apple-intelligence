@@ -5732,6 +5732,16 @@ class IPCHandlers {
       return { success: true, text: result.text || "" };
     });
 
+    ipcMain.handle("show-screen-glow", async () => {
+      await this.windowManager.showScreenGlow();
+      return { success: true };
+    });
+
+    ipcMain.handle("hide-screen-glow", async () => {
+      this.windowManager.hideScreenGlow();
+      return { success: true };
+    });
+
     ipcMain.handle("start-dictation-preview", async (_event, { provider, model, language }) => {
       resetDictationPreviewState();
       dictationPreviewMode = true;

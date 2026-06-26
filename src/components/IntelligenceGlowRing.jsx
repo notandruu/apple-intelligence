@@ -76,8 +76,7 @@ export function IntelligenceGlowRing({
 
   return (
     <div style={{ position: "relative", display: "inline-block" }}>
-      {children}
-
+      {/* Ring layers behind button — no zIndex so they stay visible in transparent window */}
       {LAYERS.map(({ lineWidth, blur, duration }, i) => {
         const ringDiameter = (size + lineWidth * 2) * (i === LAYERS.length - 1 ? scaleBoost : 1);
         return (
@@ -99,11 +98,14 @@ export function IntelligenceGlowRing({
               opacity: effectiveOpacity,
               transition: `background ${duration}ms ease-in-out, opacity 80ms ease-out, width 120ms ease-out, height 120ms ease-out`,
               pointerEvents: "none",
-              zIndex: -1,
             }}
           />
         );
       })}
+      {/* Button on top so it captures clicks */}
+      <div style={{ position: "relative", zIndex: 1 }}>
+        {children}
+      </div>
     </div>
   );
 }
