@@ -262,22 +262,22 @@ class TrayManager {
 
   updateTrayMenu() {
     if (!this.tray) return;
-
-    const contextMenu = Menu.buildFromTemplate(this.buildContextMenuTemplate());
-    this.tray.setToolTip(i18nMain.t("tray.tooltip"));
-    this.tray.setContextMenu(contextMenu);
+    // No dropdown — click toggles control panel directly
+    this.tray.setContextMenu(null);
   }
 
   setupTrayEventHandlers() {
-    if (!this.tray) {
-      return;
-    }
+    if (!this.tray) return;
 
-    if (process.platform !== "darwin") {
-      this.tray.on("click", () => {
+    // Single click toggles the control panel open/closed on all platforms
+    this.tray.on("click", () => {
+      const win = this.controlPanelWindow || this.windowManager?.controlPanelWindow;
+      if (win && !win.isDestroyed() && win.isVisible()) {
+        win.hide();
+      } else {
         void this.showControlPanelFromTray();
-      });
-    }
+      }
+    });
 
     this.tray.on("destroyed", () => {
       debugLogger.debug("Tray icon destroyed", undefined, "tray");
