@@ -55,7 +55,7 @@ export function MeetingTranscriptionPanel() {
 
   const transcriptionModes: InferenceModeOption[] = [
     {
-      id: "apple-intelligence",
+      id: "openwhispr",
       label: t("settingsPage.transcription.modes.apple-intelligence"),
       description: t("settingsPage.transcription.modes.apple-intelligenceDesc"),
       icon: <Cloud className="w-4 h-4" />,
@@ -83,14 +83,14 @@ export function MeetingTranscriptionPanel() {
   ];
 
   const handleTranscriptionModeSelect = (mode: InferenceMode) => {
-    if (mode === "apple-intelligence" && !isSignedIn) {
+    if (mode === "openwhispr" && !isSignedIn) {
       startOnboarding();
       return;
     }
     if (mode === meetingTranscriptionMode) return;
     setMeetingTranscriptionMode(mode);
     setMeetingUseLocalWhisper(mode === "local");
-    setMeetingCloudTranscriptionMode(mode === "apple-intelligence" ? "apple-intelligence" : "byok");
+    setMeetingCloudTranscriptionMode(mode === "openwhispr" ? "openwhispr" : "byok");
   };
 
   const handleLocalTranscriptionModelSelect = useCallback(

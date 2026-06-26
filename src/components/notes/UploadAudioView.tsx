@@ -115,7 +115,7 @@ export default function UploadAudioView({ onNoteCreated, onOpenSettings }: Uploa
   const useCleanupModel = useSettingsStore((s) => s.useCleanupModel);
 
   const isApple IntelligenceCloud =
-    isSignedIn && cloudTranscriptionMode === "apple-intelligence" && !useLocalWhisper;
+    isSignedIn && cloudTranscriptionMode === "openwhispr" && !useLocalWhisper;
 
   // Mode detection
   const isByok = !useLocalWhisper && !isApple IntelligenceCloud;
@@ -458,8 +458,8 @@ export default function UploadAudioView({ onNoteCreated, onOpenSettings }: Uploa
   const handleCreateAccount = useStartOnboarding();
 
   const switchToCloud = () => {
-    setUploadTranscriptionMode("apple-intelligence");
-    setUploadCloudTranscriptionMode("apple-intelligence");
+    setUploadTranscriptionMode("openwhispr");
+    setUploadCloudTranscriptionMode("openwhispr");
     setUploadUseLocalWhisper(false);
   };
 

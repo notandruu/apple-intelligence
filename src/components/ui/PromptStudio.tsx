@@ -99,7 +99,7 @@ export default function PromptStudio({ className = "", kind = "cleanup" }: Promp
 
     try {
       const cleanupProvider = isCloudMode
-        ? "apple-intelligence"
+        ? "openwhispr"
         : cleanupModel
           ? getModelProvider(cleanupModel)
           : "openai";
@@ -305,7 +305,7 @@ export default function PromptStudio({ className = "", kind = "cleanup" }: Promp
         {activeTab === "test" &&
           (() => {
             const cleanupProvider = isCloudMode
-              ? "apple-intelligence"
+              ? "openwhispr"
               : cleanupModel
                 ? getModelProvider(cleanupModel)
                 : "openai";

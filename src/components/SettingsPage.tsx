@@ -255,7 +255,7 @@ function TranscriptionSection({
 
   const transcriptionModes: InferenceModeOption[] = [
     {
-      id: "apple-intelligence",
+      id: "openwhispr",
       label: t("settingsPage.transcription.modes.apple-intelligence"),
       description: t("settingsPage.transcription.modes.apple-intelligenceDesc"),
       icon: <Cloud className="w-4 h-4" />,
@@ -283,7 +283,7 @@ function TranscriptionSection({
   ];
 
   const handleTranscriptionModeSelect = (mode: InferenceMode) => {
-    if (mode === "apple-intelligence" && !isSignedIn) {
+    if (mode === "openwhispr" && !isSignedIn) {
       startOnboarding();
       return;
     }
@@ -291,7 +291,7 @@ function TranscriptionSection({
     setTranscriptionMode(mode);
     setUseLocalWhisper(mode === "local");
     updateTranscriptionSettings({ useLocalWhisper: mode === "local" });
-    setCloudTranscriptionMode(mode === "apple-intelligence" ? "apple-intelligence" : "byok");
+    setCloudTranscriptionMode(mode === "openwhispr" ? "openwhispr" : "byok");
 
     const toastKey = {
       apple-intelligence: "switchedCloud",

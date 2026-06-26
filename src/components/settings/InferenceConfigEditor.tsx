@@ -62,7 +62,7 @@ export default function InferenceConfigEditor({ scope, onModeChange }: Inference
   const prefix = MODE_LABEL_PREFIX[scope];
   const modes: InferenceModeOption[] = [
     {
-      id: "apple-intelligence",
+      id: "openwhispr",
       label: t(`${prefix}.apple-intelligence`),
       description: t(`${prefix}.apple-intelligenceDesc`),
       icon: <Cloud className="w-4 h-4" />,
@@ -105,7 +105,7 @@ export default function InferenceConfigEditor({ scope, onModeChange }: Inference
 
   const handleModeSelect = useCallback(
     (mode: InferenceMode) => {
-      if (mode === "apple-intelligence" && !isSignedIn) {
+      if (mode === "openwhispr" && !isSignedIn) {
         startCloudOnboarding();
         return;
       }
@@ -113,7 +113,7 @@ export default function InferenceConfigEditor({ scope, onModeChange }: Inference
 
       const patch: Parameters<typeof setResolvedLLMConfig>[1] = {
         mode,
-        cloudMode: mode === "apple-intelligence" ? "apple-intelligence" : "byok",
+        cloudMode: mode === "openwhispr" ? "openwhispr" : "byok",
       };
       if (!isProviderValidForMode(config.provider, mode)) {
         patch.provider = "";
@@ -121,7 +121,7 @@ export default function InferenceConfigEditor({ scope, onModeChange }: Inference
       }
       setResolvedLLMConfig(scope, patch);
 
-      if (mode === "apple-intelligence" || mode === "self-hosted" || mode === "enterprise") {
+      if (mode === "openwhispr" || mode === "self-hosted" || mode === "enterprise") {
         window.electronAPI?.llamaServerStop?.();
       }
 
