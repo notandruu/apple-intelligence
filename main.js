@@ -826,7 +826,7 @@ async function startApp() {
   });
 
   if (process.platform === "darwin") {
-    app.setActivationPolicy("regular");
+    app.setActivationPolicy("accessory"); // hide from Dock; lives in menu bar only
   }
 
   // In development, wait for Vite dev server to be ready
