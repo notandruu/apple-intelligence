@@ -29,7 +29,7 @@ const FLOATING_OVERLAY_TYPE =
       : "normal";
 
 const WINDOW_SIZES = {
-  BASE: { width: 96, height: 96 },
+  BASE: { width: 200, height: 200 },
   WITH_MENU: { width: 240, height: 280 },
   WITH_TOAST: { width: 400, height: 500 },
   EXPANDED: { width: 400, height: 500 },
@@ -78,7 +78,7 @@ const CONTROL_PANEL_CONFIG = {
     // directly from the browser. These would be blocked by CORS otherwise.
     webSecurity: false,
     spellcheck: false,
-    backgroundThrottling: false,
+    backgroundThrottling: true,
   },
   title: "Control Panel",
   resizable: true,
@@ -248,7 +248,7 @@ const SCREEN_GLOW_CONFIG = {
     nodeIntegration: false,
     contextIsolation: true,
     sandbox: true,
-    backgroundThrottling: false,
+    backgroundThrottling: true,
   },
 };
 
@@ -278,7 +278,7 @@ const AGENT_OVERLAY_CONFIG = {
     sandbox: false,
     webSecurity: false,
     spellcheck: false,
-    backgroundThrottling: false,
+    backgroundThrottling: true,
   },
 };
 

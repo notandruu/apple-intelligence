@@ -27,6 +27,7 @@ class WindowManager {
     this._notificationTimeout = null;
     this.transcriptionPreviewWindow = null;
     this._siriGlowProcess = null;
+    this._siriGlowIdleTimer = null;
     this.updateNotificationWindow = null;
     this._updateNotificationDismissed = false;
     this.notificationPrefs = {
@@ -909,6 +910,14 @@ class WindowManager {
   _ensureSiriGlowHelper() {
     if (this._siriGlowProcess && !this._siriGlowProcess.killed) return;
 
+    // Kill any stale instances that may have leaked
+    try {
+      require("child_process").execSync(
+        "pkill -f 'SiriGlowHelper.app/Contents/MacOS/SiriGlowHelper'",
+        { stdio: "ignore" }
+      );
+    } catch (_) {}
+
     const { spawn } = require("child_process");
     const helperBin = require("path").join(
       __dirname, "..", "..", "resources", "mac",
@@ -924,9 +933,23 @@ class WindowManager {
     });
   }
 
+  _resetSiriGlowIdleTimer() {
+    if (this._siriGlowIdleTimer) clearTimeout(this._siriGlowIdleTimer);
+    // Kill the helper after 10 minutes idle to free resources
+    this._siriGlowIdleTimer = setTimeout(() => {
+      this.stopSiriGlowHelper();
+      this._siriGlowIdleTimer = null;
+    }, 10 * 60 * 1000);
+  }
+
   async showScreenGlow() {
     if (process.platform !== "darwin") return;
     this._ensureSiriGlowHelper();
+    // Reset idle shutdown timer — we're actively using it
+    if (this._siriGlowIdleTimer) {
+      clearTimeout(this._siriGlowIdleTimer);
+      this._siriGlowIdleTimer = null;
+    }
     try {
       this._siriGlowProcess?.stdin?.write("show\n");
     } catch (_) {}
@@ -937,9 +960,15 @@ class WindowManager {
     try {
       this._siriGlowProcess?.stdin?.write("hide\n");
     } catch (_) {}
+    // Start idle countdown — kill helper if unused for 10 minutes
+    this._resetSiriGlowIdleTimer();
   }
 
   stopSiriGlowHelper() {
+    if (this._siriGlowIdleTimer) {
+      clearTimeout(this._siriGlowIdleTimer);
+      this._siriGlowIdleTimer = null;
+    }
     if (this._siriGlowProcess && !this._siriGlowProcess.killed) {
       this._siriGlowProcess.kill();
       this._siriGlowProcess = null;
