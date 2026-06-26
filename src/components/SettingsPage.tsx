@@ -294,7 +294,7 @@ function TranscriptionSection({
     setCloudTranscriptionMode(mode === "openwhispr" ? "openwhispr" : "byok");
 
     const toastKey = {
-      apple-intelligence: "switchedCloud",
+      openwhispr: "switchedCloud",
       providers: "switchedProviders",
       local: "switchedLocal",
       "self-hosted": "switchedSelfHosted",
@@ -399,7 +399,7 @@ interface AiModelsSectionProps {
 }
 
 const CLEANUP_MODE_TOAST_KEY: Record<InferenceMode, string> = {
-  apple-intelligence: "switchedCloud",
+  openwhispr: "switchedCloud",
   providers: "switchedProviders",
   local: "switchedLocal",
   "self-hosted": "switchedSelfHosted",
