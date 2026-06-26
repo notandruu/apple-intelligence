@@ -67,11 +67,11 @@ class TrayManager {
       }
       this.attachControlPanelListeners(this.controlPanelWindow);
 
+      const hideDock = () => {
+        if (process.platform === "darwin") app.dock?.hide();
+      };
+
       if (this.controlPanelWindow && !this.controlPanelWindow.isDestroyed()) {
-        // Show dock icon on macOS when control panel opens
-        if (process.platform === "darwin" && app.dock) {
-          app.dock.show();
-        }
         if (this.controlPanelWindow.isMinimized()) {
           this.controlPanelWindow.restore();
         }
@@ -79,6 +79,7 @@ class TrayManager {
           this.controlPanelWindow.show();
         }
         this.controlPanelWindow.focus();
+        hideDock(); // re-hide after focus in case macOS re-added it
         if (this.controlPanelWindow.webContents.isCrashed()) {
           this.controlPanelWindow.webContents.reload();
         }
@@ -96,6 +97,7 @@ class TrayManager {
         if (this.controlPanelWindow && !this.controlPanelWindow.isDestroyed()) {
           this.controlPanelWindow.show();
           this.controlPanelWindow.focus();
+          hideDock();
         }
         return;
       }

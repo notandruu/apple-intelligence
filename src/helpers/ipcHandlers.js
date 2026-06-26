@@ -755,7 +755,7 @@ class IPCHandlers {
     ipcMain.handle("hide-window", () => {
       if (process.platform === "darwin") {
         this.windowManager.hideDictationPanel();
-        if (app.dock) app.dock.show();
+        if (app.dock) app.dock?.hide();
       } else {
         this.windowManager.hideDictationPanel();
       }

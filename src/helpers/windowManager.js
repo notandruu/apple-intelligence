@@ -648,7 +648,7 @@ class WindowManager {
     this.controlPanelWindow.once("ready-to-show", () => {
       clearVisibilityTimer();
       if (process.platform === "darwin" && app.dock) {
-        app.dock.show();
+        app.dock?.hide();
       }
       this.controlPanelWindow.show();
       this.controlPanelWindow.focus();

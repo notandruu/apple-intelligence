@@ -827,6 +827,8 @@ async function startApp() {
 
   if (process.platform === "darwin") {
     app.setActivationPolicy("accessory"); // hide from Dock; lives in menu bar only
+    // Re-hide Dock whenever any window gets focus — macOS can briefly re-add it
+    app.on("browser-window-focus", () => { app.dock?.hide(); });
   }
 
   // In development, wait for Vite dev server to be ready
@@ -1531,7 +1533,7 @@ if (gotSingleInstanceLock) {
       if (windowManager && isLiveWindow(windowManager.controlPanelWindow)) {
         // Ensure dock icon is visible when control panel opens
         if (process.platform === "darwin" && app.dock) {
-          app.dock.show();
+          app.dock?.hide();
         }
         if (windowManager.controlPanelWindow.isMinimized()) {
           windowManager.controlPanelWindow.restore();
