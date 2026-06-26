@@ -1019,11 +1019,10 @@ async function startApp() {
     debugLogger.debug("Windows paste tool status", nircmdStatus);
   }
 
-  // Tray hidden — app runs as invisible background utility (Globe/Fn hotkey only)
-  // trayManager.setWindows(windowManager.mainWindow, windowManager.controlPanelWindow);
-  // trayManager.setWindowManager(windowManager);
-  // trayManager.setCreateControlPanelCallback(() => windowManager.createControlPanelWindow());
-  // await trayManager.createTray();
+  trayManager.setWindows(windowManager.mainWindow, windowManager.controlPanelWindow);
+  trayManager.setWindowManager(windowManager);
+  trayManager.setCreateControlPanelCallback(() => windowManager.createControlPanelWindow());
+  await trayManager.createTray();
 
   updateManager.setWindows(windowManager.mainWindow, windowManager.controlPanelWindow);
   updateManager.checkForUpdatesOnStartup();

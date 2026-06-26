@@ -134,21 +134,19 @@ class TrayManager {
     const candidatePaths = [];
 
     if (platform === "darwin") {
+      // Use the clean dot template for the menu bar
       if (isDevelopment) {
+        candidatePaths.push(path.join(__dirname, "..", "assets", "trayDotTemplate@2x.png"));
         candidatePaths.push(path.join(__dirname, "..", "assets", "iconTemplate@3x.png"));
       } else {
         candidatePaths.push(
+          path.join(process.resourcesPath, "src", "assets", "trayDotTemplate@2x.png"),
           path.join(process.resourcesPath, "src", "assets", "iconTemplate@3x.png"),
+          path.join(process.resourcesPath, "assets", "trayDotTemplate@2x.png"),
           path.join(process.resourcesPath, "assets", "iconTemplate@3x.png"),
-          path.join(
-            process.resourcesPath,
-            "app.asar.unpacked",
-            "src",
-            "assets",
-            "iconTemplate@3x.png"
-          ),
+          path.join(__dirname, "..", "..", "src", "assets", "trayDotTemplate@2x.png"),
           path.join(__dirname, "..", "..", "src", "assets", "iconTemplate@3x.png"),
-          path.join(app.getAppPath(), "src", "assets", "iconTemplate@3x.png")
+          path.join(app.getAppPath(), "src", "assets", "trayDotTemplate@2x.png")
         );
       }
     } else {
