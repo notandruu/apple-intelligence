@@ -13,6 +13,7 @@ class MediaPlayer {
     this._macBinaryPath = null;
     this._pausedPlayers = []; // MPRIS players we paused (Linux)
     this._didPause = false; // Whether we sent a pause via toggle fallback
+    this._pausedMacApp = null; // Which app we paused on macOS
     this._pausedWinApps = []; // GSMTC app IDs we paused (Windows)
   }
 
@@ -334,32 +335,51 @@ class MediaPlayer {
 
   // --- macOS: MediaRemote-aware pause/resume ---
 
+  // Music apps to target directly, in priority order
+  _macMusicApps() {
+    return ["Spotify", "Music", "Deezer", "Tidal", "Vox", "Doppler", "Capo"];
+  }
+
   _pauseMacOS() {
     this._didPause = false;
+    this._pausedMacApp = null;
 
-    // Try MediaRemote binary first (state-aware, no toggle)
+    // 1. Direct AppleScript — most reliable on macOS 26, works regardless of focus
+    for (const app of this._macMusicApps()) {
+      const script = `
+        if application "${app}" is running then
+          tell application "${app}"
+            if player state is playing then
+              pause
+              return "OK"
+            end if
+          end tell
+        end if
+        return "SKIP"
+      `;
+      const result = spawnSync("osascript", ["-e", script], { stdio: "pipe", timeout: 3000 });
+      const out = (result.stdout?.toString() || "").trim();
+      if (result.status === 0 && out === "OK") {
+        debugLogger.debug("Media paused via AppleScript", { app }, "media");
+        this._didPause = true;
+        this._pausedMacApp = app;
+        return true;
+      }
+    }
+
+    // 2. MediaRemote binary fallback
     const binary = this._resolveMacMediaRemote();
     if (binary) {
-      const result = spawnSync(binary, ["--pause"], {
-        stdio: "pipe",
-        timeout: 3000,
-      });
+      const result = spawnSync(binary, ["--pause"], { stdio: "pipe", timeout: 3000 });
       if (result.status === 0) {
         debugLogger.debug("Media paused via MediaRemote", {}, "media");
         this._didPause = true;
         return true;
       }
-      // exit 1 = nothing was playing, don't fallback to toggle
       const output = (result.stdout?.toString() || "").trim();
       if (output === "NOT_PLAYING") return false;
     }
 
-    // Fallback to media key toggle
-    debugLogger.debug("MediaRemote unavailable, falling back to osascript", {}, "media");
-    if (this._sendMacMediaKey()) {
-      this._didPause = true;
-      return true;
-    }
     return false;
   }
 
@@ -367,30 +387,41 @@ class MediaPlayer {
     if (!this._didPause) return false;
     this._didPause = false;
 
+    // Resume the specific app we paused
+    if (this._pausedMacApp) {
+      const app = this._pausedMacApp;
+      this._pausedMacApp = null;
+      const script = `
+        if application "${app}" is running then
+          tell application "${app}" to play
+        end if
+      `;
+      const result = spawnSync("osascript", ["-e", script], { stdio: "pipe", timeout: 3000 });
+      if (result.status === 0) {
+        debugLogger.debug("Media resumed via AppleScript", { app }, "media");
+        return true;
+      }
+    }
+
+    // MediaRemote fallback
     const binary = this._resolveMacMediaRemote();
     if (binary) {
-      const result = spawnSync(binary, ["--play"], {
-        stdio: "pipe",
-        timeout: 3000,
-      });
+      const result = spawnSync(binary, ["--play"], { stdio: "pipe", timeout: 3000 });
       if (result.status === 0) {
         debugLogger.debug("Media resumed via MediaRemote", {}, "media");
         return true;
       }
     }
 
-    // Fallback to media key toggle
-    return this._sendMacMediaKey();
+    return false;
   }
 
   _sendMacMediaKey() {
+    // Kept for toggleMedia only
     const result = spawnSync(
       "osascript",
       ["-e", 'tell application "System Events" to key code 100'],
-      {
-        stdio: "pipe",
-        timeout: 3000,
-      }
+      { stdio: "pipe", timeout: 3000 }
     );
     if (result.status === 0) {
       debugLogger.debug("Media key sent via osascript", {}, "media");
@@ -400,19 +431,28 @@ class MediaPlayer {
   }
 
   _toggleMacOS() {
-    const result = spawnSync(
-      "osascript",
-      ["-e", 'tell application "System Events" to key code 100'],
-      {
-        stdio: "pipe",
-        timeout: 3000,
+    // Try direct app toggle first
+    for (const app of this._macMusicApps()) {
+      const script = `
+        if application "${app}" is running then
+          tell application "${app}"
+            if player state is playing then
+              pause
+            else
+              play
+            end if
+          end tell
+          return "OK"
+        end if
+        return "SKIP"
+      `;
+      const result = spawnSync("osascript", ["-e", script], { stdio: "pipe", timeout: 3000 });
+      if (result.status === 0 && (result.stdout?.toString() || "").trim() === "OK") {
+        debugLogger.debug("Media toggled via AppleScript", { app }, "media");
+        return true;
       }
-    );
-    if (result.status === 0) {
-      debugLogger.debug("Media toggled via osascript", {}, "media");
-      return true;
     }
-    return false;
+    return this._sendMacMediaKey();
   }
 
   // --- Windows: GSMTC-aware pause/resume ---
