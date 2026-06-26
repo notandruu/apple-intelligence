@@ -1,99 +1,57 @@
 import logger from "./logger";
 import { getSettings } from "../stores/settingsStore";
-
-const START_NOTES = [523.25, 659.25];
-const STOP_NOTES = [587.33, 440];
-const NOTE_DURATION_SECONDS = 0.09;
-const NOTE_GAP_SECONDS = 0.025;
-const NOTE_ATTACK_SECONDS = 0.015;
-const MAX_GAIN = 0.2;
-const MIN_GAIN = 0.0001;
+import startSound from "../assets/siri-start.mp3";
 
 let audioContext = null;
+let startBuffer = null;
 
 const getAudioContext = () => {
-  if (typeof window === "undefined") {
-    return null;
-  }
-
-  const AudioContextCtor = window.AudioContext || window.webkitAudioContext;
-  if (!AudioContextCtor) {
-    return null;
-  }
-
-  if (!audioContext || audioContext.state === "closed") {
-    audioContext = new AudioContextCtor();
-  }
-
+  if (typeof window === "undefined") return null;
+  const Ctor = window.AudioContext || window.webkitAudioContext;
+  if (!Ctor) return null;
+  if (!audioContext || audioContext.state === "closed") audioContext = new Ctor();
   return audioContext;
 };
 
 export const resumeContextIfNeeded = async () => {
   try {
-    const context = getAudioContext();
-    if (!context) {
-      return null;
-    }
-
-    if (context.state === "suspended") {
-      await context.resume();
-    }
-
-    return context.state === "running" ? context : null;
+    const ctx = getAudioContext();
+    if (!ctx) return null;
+    if (ctx.state === "suspended") await ctx.resume();
+    return ctx.state === "running" ? ctx : null;
   } catch (error) {
-    logger.debug(
-      "Failed to initialize dictation cue audio context",
-      { error: error instanceof Error ? error.message : String(error) },
-      "audio"
-    );
+    logger.debug("Failed to initialize dictation cue audio context", { error: String(error) }, "audio");
     return null;
   }
 };
 
-const scheduleTone = (context, frequency, startTime) => {
-  const oscillator = context.createOscillator();
-  const gainNode = context.createGain();
-  const stopTime = startTime + NOTE_DURATION_SECONDS;
-
-  oscillator.type = "sine";
-  oscillator.frequency.setValueAtTime(frequency, startTime);
-
-  gainNode.gain.setValueAtTime(MIN_GAIN, startTime);
-  gainNode.gain.linearRampToValueAtTime(MAX_GAIN, startTime + NOTE_ATTACK_SECONDS);
-  gainNode.gain.exponentialRampToValueAtTime(MIN_GAIN, stopTime);
-
-  oscillator.connect(gainNode);
-  gainNode.connect(context.destination);
-
-  oscillator.start(startTime);
-  oscillator.stop(stopTime + 0.01);
+const loadStartBuffer = async (ctx) => {
+  if (startBuffer) return startBuffer;
+  try {
+    const response = await fetch(startSound);
+    const arrayBuffer = await response.arrayBuffer();
+    startBuffer = await ctx.decodeAudioData(arrayBuffer);
+  } catch (error) {
+    logger.debug("Failed to load start cue audio", { error: String(error) }, "audio");
+  }
+  return startBuffer;
 };
 
-const isEnabled = () => getSettings().audioCuesEnabled;
-
-const playCue = async (notes) => {
+export const playStartCue = async () => {
   try {
-    if (!isEnabled()) return;
-
-    const context = await resumeContextIfNeeded();
-    if (!context) {
-      return;
-    }
-
-    const baseTime = context.currentTime + 0.005;
-    notes.forEach((frequency, index) => {
-      const noteStart = baseTime + index * (NOTE_DURATION_SECONDS + NOTE_GAP_SECONDS);
-      scheduleTone(context, frequency, noteStart);
-    });
+    if (!getSettings().audioCuesEnabled) return;
+    const ctx = await resumeContextIfNeeded();
+    if (!ctx) return;
+    const buffer = await loadStartBuffer(ctx);
+    if (!buffer) return;
+    const source = ctx.createBufferSource();
+    source.buffer = buffer;
+    source.connect(ctx.destination);
+    source.start();
   } catch (error) {
-    logger.debug(
-      "Failed to play dictation cue",
-      { error: error instanceof Error ? error.message : String(error) },
-      "audio"
-    );
+    logger.debug("Failed to play start cue", { error: String(error) }, "audio");
   }
 };
 
-export const playStartCue = () => playCue(START_NOTES);
-
-export const playStopCue = () => playCue(STOP_NOTES);
+// Stop cue removed — screen glow is the only feedback needed.
+export const playStopCue = () => {};

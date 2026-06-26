@@ -122,7 +122,7 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
   const cortiClientSecret = useSettingsStore((s) => s.cortiClientSecret);
 
   const [hotkey, setHotkey] = useState(dictationKey || getDefaultHotkey());
-  const [agentName, setAgentName] = useState("OpenWhispr");
+  const [agentName, setAgentName] = useState("Apple Intelligence");
   const [skipAuth, setSkipAuth] = useState(false);
   const [pendingVerificationEmail, setPendingVerificationEmail] = useState<string | null>(null);
   const [isModelDownloaded, setIsModelDownloaded] = useState(false);
@@ -357,7 +357,7 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
     void window.electronAPI?.markBundleMigrated?.();
 
     // Non-signed-in users in cloud mode default to BYOK to avoid
-    // "OpenWhispr Cloud requires sign-in" errors.
+    // "Apple Intelligence Cloud requires sign-in" errors.
     if (!isSignedIn && !useLocalWhisper) {
       updateTranscriptionSettings({ cloudTranscriptionMode: "byok" });
     }

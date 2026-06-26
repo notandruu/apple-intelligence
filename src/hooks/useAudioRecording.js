@@ -13,6 +13,7 @@ export const useAudioRecording = (toast, options = {}) => {
   const [isRecording, setIsRecording] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isStreaming, setIsStreaming] = useState(false);
+  const [audioLevel, setAudioLevel] = useState(0);
   const [transcript, setTranscript] = useState("");
   const [partialTranscript, setPartialTranscript] = useState("");
   const audioManagerRef = useRef(null);
@@ -89,8 +90,19 @@ export const useAudioRecording = (toast, options = {}) => {
     audioManagerRef.current = new AudioManager();
 
     audioManagerRef.current.setCallbacks({
+      onAudioLevel: (level) => {
+        setAudioLevel(level);
+      },
       onStateChange: ({ isRecording, isProcessing, isStreaming }) => {
-        if (!isRecording) window.electronAPI?.unregisterCancelHotkey?.();
+        if (!isRecording) {
+          window.electronAPI?.unregisterCancelHotkey?.();
+          setAudioLevel(0);
+        }
+        if (isRecording || isStreaming) {
+          window.electronAPI?.showScreenGlow?.();
+        } else {
+          window.electronAPI?.hideScreenGlow?.();
+        }
         setIsRecording(isRecording);
         setIsProcessing(isProcessing);
         setIsStreaming(isStreaming ?? false);
@@ -176,7 +188,7 @@ export const useAudioRecording = (toast, options = {}) => {
           }
 
           // Cloud usage: limit reached after this transcription
-          if (result.source === "openwhispr" && result.limitReached) {
+          if (result.source === "apple-intelligence" && result.limitReached) {
             // Notify control panel to show UpgradePrompt dialog
             window.electronAPI?.notifyLimitReached?.({
               wordsUsed: result.wordsUsed,
@@ -306,6 +318,7 @@ export const useAudioRecording = (toast, options = {}) => {
     isRecording,
     isProcessing,
     isStreaming,
+    audioLevel,
     transcript,
     partialTranscript,
     startRecording: performStartRecording,

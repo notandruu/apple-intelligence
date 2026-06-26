@@ -22,7 +22,7 @@ function fetchJson(url, redirectCount = 0) {
     }
 
     const headers = {
-      "User-Agent": "OpenWhispr-Downloader",
+      "User-Agent": "Apple Intelligence-Downloader",
       Accept: "application/vnd.github+json",
     };
 

@@ -9,7 +9,7 @@ import { useSettingsStore } from "../../stores/settingsStore";
 import { USE_CASE_IDS } from "./useCases";
 
 const CORTI_SIGNUP_URL =
-  "https://www.corti.ai/?utm_source=referral&utm_content=&utm_campaign=openwhispr";
+  "https://www.corti.ai/?utm_source=referral&utm_content=&utm_campaign=apple-intelligence";
 
 interface FinishStepProps {
   isCloudUser: boolean;

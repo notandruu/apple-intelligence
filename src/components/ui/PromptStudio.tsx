@@ -38,7 +38,7 @@ const PROVIDER_CONFIG: Record<string, ProviderConfig> = {
   anthropic: { label: "Anthropic", apiKeyStorageKey: "anthropicApiKey" },
   gemini: { label: "Gemini", apiKeyStorageKey: "geminiApiKey" },
   groq: { label: "Groq", apiKeyStorageKey: "groqApiKey" },
-  openwhispr: { label: "OpenWhispr Cloud" },
+  apple-intelligence: { label: "Apple Intelligence Cloud" },
   custom: {
     label: "Custom endpoint",
     apiKeyStorageKey: "openaiApiKey",
@@ -99,7 +99,7 @@ export default function PromptStudio({ className = "", kind = "cleanup" }: Promp
 
     try {
       const cleanupProvider = isCloudMode
-        ? "openwhispr"
+        ? "apple-intelligence"
         : cleanupModel
           ? getModelProvider(cleanupModel)
           : "openai";
@@ -305,7 +305,7 @@ export default function PromptStudio({ className = "", kind = "cleanup" }: Promp
         {activeTab === "test" &&
           (() => {
             const cleanupProvider = isCloudMode
-              ? "openwhispr"
+              ? "apple-intelligence"
               : cleanupModel
                 ? getModelProvider(cleanupModel)
                 : "openai";
@@ -314,7 +314,7 @@ export default function PromptStudio({ className = "", kind = "cleanup" }: Promp
             };
 
             const displayModel = isCloudMode
-              ? t("promptStudio.test.openwhisprCloud")
+              ? t("promptStudio.test.apple-intelligenceCloud")
               : cleanupModel || t("promptStudio.test.none");
             const displayProvider =
               cleanupProvider === "custom"

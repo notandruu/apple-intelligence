@@ -4,9 +4,9 @@ const path = require("path");
 const os = require("os");
 const debugLogger = require("./debugLogger");
 
-const DBUS_SERVICE_NAME = "com.openwhispr.App";
-const DBUS_OBJECT_PATH = "/com/openwhispr/App";
-const DBUS_INTERFACE = "com.openwhispr.App";
+const DBUS_SERVICE_NAME = "com.apple-intelligence.App";
+const DBUS_OBJECT_PATH = "/com/apple-intelligence/App";
+const DBUS_INTERFACE = "com.apple-intelligence.App";
 
 // Map Electron modifier names to Hyprland modifier names
 const ELECTRON_TO_HYPRLAND_MOD = {
@@ -45,9 +45,9 @@ const ELECTRON_TO_HYPRLAND_KEY = {
 const VALID_HOTKEY_PATTERN =
   /^((CommandOrControl|CmdOrCtrl|Control|Ctrl|Alt|Option|Shift|Super|Meta|Win|Command|Cmd)(\+(CommandOrControl|CmdOrCtrl|Control|Ctrl|Alt|Option|Shift|Super|Meta|Win|Command|Cmd))*(\+)?)?(F([1-9]|1[0-9]|2[0-4])|[A-Za-z0-9]|Space|Escape|Tab|Backspace|Delete|Insert|Home|End|PageUp|PageDown|ArrowUp|ArrowDown|ArrowLeft|ArrowRight|Enter|PrintScreen|ScrollLock|Pause|Backquote|`)?$/i;
 
-const BINDS_FILENAME = "openwhispr-binds.conf";
+const BINDS_FILENAME = "apple-intelligence-binds.conf";
 const MANAGED_HEADER_LINES = [
-  "# OpenWhispr keybinds (managed automatically)",
+  "# Apple Intelligence keybinds (managed automatically)",
   "# If you delete this file, also remove the matching source line from your Hyprland config.",
 ];
 
@@ -162,7 +162,7 @@ class HyprlandShortcutManager {
   }
 
   _createInterfaceClass(dbusModule, callback) {
-    class OpenWhisprInterface extends dbusModule.interface.Interface {
+    class Apple IntelligenceInterface extends dbusModule.interface.Interface {
       constructor() {
         super(DBUS_INTERFACE);
         this._callback = callback;
@@ -175,13 +175,13 @@ class HyprlandShortcutManager {
       }
     }
 
-    OpenWhisprInterface.configureMembers({
+    Apple IntelligenceInterface.configureMembers({
       methods: {
         Toggle: { inSignature: "", outSignature: "" },
       },
     });
 
-    return OpenWhisprInterface;
+    return Apple IntelligenceInterface;
   }
 
   static isValidHotkey(hotkey) {
@@ -355,7 +355,7 @@ class HyprlandShortcutManager {
    * Register a keybinding in Hyprland using hyprctl keyword bind.
    * The binding executes a dbus-send command that calls our Toggle() method.
    *
-   * Also writes the bind to openwhispr-binds.conf (sourced from hyprland.conf)
+   * Also writes the bind to apple-intelligence-binds.conf (sourced from hyprland.conf)
    * so it survives `hyprctl reload`.
    */
   async registerKeybinding(hotkey) {
@@ -376,7 +376,7 @@ class HyprlandShortcutManager {
     }
 
     try {
-      // First unregister any existing OpenWhispr binding if the hotkey changed.
+      // First unregister any existing Apple Intelligence binding if the hotkey changed.
       if (this.currentBinding && this.currentBinding !== converted.bindKey) {
         await this.unregisterKeybinding();
       }

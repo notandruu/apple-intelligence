@@ -1,27 +1,27 @@
 const { execFileSync } = require("child_process");
 const debugLogger = require("./debugLogger");
 
-const DBUS_SERVICE_NAME = "com.openwhispr.App";
-const DBUS_OBJECT_PATH = "/com/openwhispr/App";
-const DBUS_INTERFACE = "com.openwhispr.App";
+const DBUS_SERVICE_NAME = "com.apple-intelligence.App";
+const DBUS_OBJECT_PATH = "/com/apple-intelligence/App";
+const DBUS_INTERFACE = "com.apple-intelligence.App";
 
 // Per-slot gsettings paths and display names
 const SLOT_CONFIG = {
   dictation: {
-    path: "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/openwhispr/",
-    name: "OpenWhispr Toggle",
+    path: "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/apple-intelligence/",
+    name: "Apple Intelligence Toggle",
   },
   agent: {
-    path: "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/openwhispr-agent/",
-    name: "OpenWhispr Agent",
+    path: "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/apple-intelligence-agent/",
+    name: "Apple Intelligence Agent",
   },
   meeting: {
-    path: "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/openwhispr-meeting/",
-    name: "OpenWhispr Meeting",
+    path: "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/apple-intelligence-meeting/",
+    name: "Apple Intelligence Meeting",
   },
   voiceAgent: {
-    path: "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/openwhispr-voice-agent/",
-    name: "OpenWhispr Voice Agent",
+    path: "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/apple-intelligence-voice-agent/",
+    name: "Apple Intelligence Voice Agent",
   },
 };
 
@@ -171,7 +171,7 @@ class GnomeShortcutManager {
   }
 
   _createInterfaceClass(dbusModule) {
-    class OpenWhisprInterface extends dbusModule.interface.Interface {
+    class Apple IntelligenceInterface extends dbusModule.interface.Interface {
       constructor(dictationCallback, agentCallback, meetingCallback, voiceAgentCallback) {
         super(DBUS_INTERFACE);
         this._dictationCallback = dictationCallback;
@@ -205,7 +205,7 @@ class GnomeShortcutManager {
       }
     }
 
-    OpenWhisprInterface.configureMembers({
+    Apple IntelligenceInterface.configureMembers({
       methods: {
         Toggle: { inSignature: "", outSignature: "" },
         ToggleAgent: { inSignature: "", outSignature: "" },
@@ -214,7 +214,7 @@ class GnomeShortcutManager {
       },
     });
 
-    return OpenWhisprInterface;
+    return Apple IntelligenceInterface;
   }
 
   static isValidShortcut(shortcut) {

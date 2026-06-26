@@ -34,9 +34,9 @@ export function UploadTranscriptionPanel() {
 
   const transcriptionModes: InferenceModeOption[] = [
     {
-      id: "openwhispr",
-      label: t("settingsPage.transcription.modes.openwhispr"),
-      description: t("settingsPage.transcription.modes.openwhisprDesc"),
+      id: "apple-intelligence",
+      label: t("settingsPage.transcription.modes.apple-intelligence"),
+      description: t("settingsPage.transcription.modes.apple-intelligenceDesc"),
       icon: <Cloud className="w-4 h-4" />,
       disabled: !isSignedIn,
       badge: !isSignedIn ? t("common.freeAccountRequired") : undefined,
@@ -56,14 +56,14 @@ export function UploadTranscriptionPanel() {
   ];
 
   const handleTranscriptionModeSelect = (mode: InferenceMode) => {
-    if (mode === "openwhispr" && !isSignedIn) {
+    if (mode === "apple-intelligence" && !isSignedIn) {
       startOnboarding();
       return;
     }
     if (mode === uploadTranscriptionMode) return;
     setUploadTranscriptionMode(mode);
     setUploadUseLocalWhisper(mode === "local");
-    setUploadCloudTranscriptionMode(mode === "openwhispr" ? "openwhispr" : "byok");
+    setUploadCloudTranscriptionMode(mode === "apple-intelligence" ? "apple-intelligence" : "byok");
   };
 
   const handleLocalTranscriptionModelSelect = useCallback(

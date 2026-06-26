@@ -31,7 +31,7 @@
 **macOS:**
 
 1. Open System Settings → Privacy & Security → Microphone
-2. Ensure OpenWhispr is listed and enabled
+2. Ensure Apple Intelligence is listed and enabled
 3. If not listed, click "Grant Access" in the app to trigger the permission prompt
 4. You can also click "Open Microphone Privacy" button in the app
 
@@ -39,7 +39,7 @@
 
 1. Open Settings → Privacy → Microphone
 2. Ensure "Allow apps to access your microphone" is ON
-3. Ensure OpenWhispr is listed and enabled
+3. Ensure Apple Intelligence is listed and enabled
 4. You can also click "Open Privacy Settings" button in the app
 
 **Linux:**
@@ -99,7 +99,7 @@
 3. If bundled binary fails, install via package manager:
    - macOS: `brew install whisper-cpp`
    - Linux: Build from source at https://github.com/ggml-org/whisper.cpp
-4. Clear model cache: `rm -rf ~/.cache/openwhispr/whisper-models`
+4. Clear model cache: `rm -rf ~/.cache/apple-intelligence/whisper-models`
 5. Try cloud transcription as fallback
 
 ### Wayland Clipboard Issues (Linux)
@@ -115,9 +115,9 @@
    - Fedora/RHEL: `sudo dnf install wl-clipboard`
    - Arch: `sudo pacman -S wl-clipboard`
 2. Ensure a paste tool is installed (`xdotool` recommended, or `wtype` for Sway/Hyprland, or `ydotool` with daemon)
-3. Restart OpenWhispr after installing
+3. Restart Apple Intelligence after installing
 
-OpenWhispr tries clipboard methods in order: `wl-copy` (most reliable) → renderer `navigator.clipboard` → X11 fallback.
+Apple Intelligence tries clipboard methods in order: `wl-copy` (most reliable) → renderer `navigator.clipboard` → X11 fallback.
 
 ### Linux System Audio PipeWire Issues
 
@@ -131,8 +131,8 @@ OpenWhispr tries clipboard methods in order: `wl-copy` (most reliable) → rende
    - Arch: `sudo pacman -S pipewire`
 2. Make sure the PipeWire user service is running for the current session
 3. Sign out and back in after installing or updating PipeWire packages
-4. Restart OpenWhispr and start meeting transcription again
-5. No screen-share chooser is expected for Linux system audio; OpenWhispr captures the default sink monitor directly through PipeWire
+4. Restart Apple Intelligence and start meeting transcription again
+5. No screen-share chooser is expected for Linux system audio; Apple Intelligence captures the default sink monitor directly through PipeWire
 
 ### Meeting Transcription Issues
 
@@ -140,7 +140,7 @@ OpenWhispr tries clipboard methods in order: `wl-copy` (most reliable) → rende
 
 **macOS:**
 
-1. Grant Screen Recording permission: System Settings → Privacy & Security → Screen Recording → enable OpenWhispr
+1. Grant Screen Recording permission: System Settings → Privacy & Security → Screen Recording → enable Apple Intelligence
 2. Restart the app after granting permission
 3. Ensure Google Calendar is connected in Integrations
 
@@ -167,32 +167,32 @@ OpenWhispr tries clipboard methods in order: `wl-copy` (most reliable) → rende
 
 **No window appears (process running in Task Manager but invisible):**
 
-1. Check the system tray (click the `^` caret) for the OpenWhispr icon
-2. Run with debug logging: `OpenWhispr.exe --log-level=debug`
-3. Try disabling GPU acceleration: `OpenWhispr.exe --disable-gpu`
+1. Check the system tray (click the `^` caret) for the Apple Intelligence icon
+2. Run with debug logging: `Apple Intelligence.exe --log-level=debug`
+3. Try disabling GPU acceleration: `Apple Intelligence.exe --disable-gpu`
 
 **Antivirus / Windows Defender blocking binaries:**
 
-whisper.cpp and FFmpeg may be quarantined silently. Add OpenWhispr to exclusions: Settings → Virus & threat protection → Exclusions.
+whisper.cpp and FFmpeg may be quarantined silently. Add Apple Intelligence to exclusions: Settings → Virus & threat protection → Exclusions.
 
 **Permission errors:**
 
-Right-click OpenWhispr → Run as administrator (or set permanently in Properties → Compatibility).
+Right-click Apple Intelligence → Run as administrator (or set permanently in Properties → Compatibility).
 
 **Firewall blocking cloud mode:**
 
-Allow OpenWhispr through Windows Firewall when using cloud transcription providers.
+Allow Apple Intelligence through Windows Firewall when using cloud transcription providers.
 
 **Complete reset (after uninstalling):**
 
 ```batch
-rd /s /q "%APPDATA%\OpenWhispr"
-rd /s /q "%LOCALAPPDATA%\OpenWhispr"
+rd /s /q "%APPDATA%\Apple Intelligence"
+rd /s /q "%LOCALAPPDATA%\Apple Intelligence"
 ```
 
 Then reinstall.
 
-**Logs location:** `%APPDATA%\OpenWhispr\logs\`
+**Logs location:** `%APPDATA%\Apple Intelligence\logs\`
 
 ## Enable Debug Mode
 
@@ -202,8 +202,8 @@ For detailed diagnostics, see [DEBUG.md](DEBUG.md).
 
 1. Enable debug mode and reproduce the issue
 2. Collect diagnostic output from commands above
-3. Open an issue at https://github.com/OpenWhispr/openwhispr/issues with:
+3. Open an issue at https://github.com/Apple Intelligence/apple-intelligence/issues with:
    - OS version
-   - OpenWhispr version
+   - Apple Intelligence version
    - Relevant log sections
    - Steps to reproduce

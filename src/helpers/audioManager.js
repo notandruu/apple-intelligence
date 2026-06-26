@@ -68,7 +68,7 @@ function resolveReasoningRoute(text, settings, agentName, voiceAgentRequested) {
   });
   if (kind === "agent") {
     const provider = isCloudAgent
-      ? "openwhispr"
+      ? "apple-intelligence"
       : settings.dictationAgentProvider?.trim() || undefined;
     const isCustomAgent = settings.dictationAgentMode === "providers" && provider === "custom";
     return {
@@ -173,6 +173,7 @@ class AudioManager {
     this.onError = null;
     this.onTranscriptionComplete = null;
     this.onPartialTranscript = null;
+    this.onAudioLevel = null;
     this.cachedApiKey = null;
     this.cachedApiKeyProvider = null;
 
@@ -281,12 +282,14 @@ registerProcessor("pcm-streaming-processor", PCMStreamingProcessor);
     onTranscriptionComplete,
     onPartialTranscript,
     onStreamingCommit,
+    onAudioLevel,
   }) {
     this.onStateChange = onStateChange;
     this.onError = onError;
     this.onTranscriptionComplete = onTranscriptionComplete;
     this.onPartialTranscript = onPartialTranscript;
     this.onStreamingCommit = onStreamingCommit;
+    this.onAudioLevel = onAudioLevel;
   }
 
   setSkipReasoning(skip) {
@@ -474,6 +477,8 @@ registerProcessor("pcm-streaming-processor", PCMStreamingProcessor);
           }
           const rms = Math.sqrt(sum / dataArray.length);
           recordLocalSpeechWindow(this._localSpeechGateState, rms, peak);
+          // Normalize rms (typical speech ~0.05–0.3) to 0–1 for the glow ring
+          this.onAudioLevel?.(Math.min(1, rms / 0.15));
         }, 100);
       } catch (e) {
         logger.warn("Audio level gate setup failed, skipping", { error: e.message }, "audio");
@@ -717,8 +722,8 @@ registerProcessor("pcm-streaming-processor", PCMStreamingProcessor);
       const cloudTranscriptionMode = settings.cloudTranscriptionMode;
       const isSignedIn = settings.isSignedIn;
 
-      const isOpenWhisprCloudMode = !useLocalWhisper && cloudTranscriptionMode === "openwhispr";
-      const useCloud = isOpenWhisprCloudMode && isSignedIn;
+      const isApple IntelligenceCloudMode = !useLocalWhisper && cloudTranscriptionMode === "apple-intelligence";
+      const useCloud = isApple IntelligenceCloudMode && isSignedIn;
       logger.debug(
         "Transcription routing",
         { useLocalWhisper, useCloud, isSignedIn, cloudTranscriptionMode },
@@ -735,17 +740,17 @@ registerProcessor("pcm-streaming-processor", PCMStreamingProcessor);
           activeModel = whisperModel;
           result = await this.processWithLocalWhisper(audioBlob, whisperModel, metadata);
         }
-      } else if (isOpenWhisprCloudMode) {
+      } else if (isApple IntelligenceCloudMode) {
         if (!isSignedIn) {
           const err = new Error(
-            "OpenWhispr Cloud requires sign-in. Please sign in again or switch to BYOK mode."
+            "Apple Intelligence Cloud requires sign-in. Please sign in again or switch to BYOK mode."
           );
           err.code = "AUTH_REQUIRED";
           err.messageKey = "hooks.audioRecording.errorDescriptions.sessionExpired";
           throw err;
         }
-        activeModel = "openwhispr-cloud";
-        result = await this.processWithOpenWhisprCloud(audioBlob, metadata);
+        activeModel = "apple-intelligence-cloud";
+        result = await this.processWithApple IntelligenceCloud(audioBlob, metadata);
       } else {
         activeModel = this.getTranscriptionModel();
         result = await this.processWithOpenAIAPI(audioBlob, metadata);
@@ -765,7 +770,7 @@ registerProcessor("pcm-streaming-processor", PCMStreamingProcessor);
 
       this.onTranscriptionComplete?.(result);
 
-      if (result?.source === "openwhispr") {
+      if (result?.source === "apple-intelligence") {
         window.dispatchEvent(new Event("usage-changed"));
       }
 
@@ -1473,7 +1478,7 @@ registerProcessor("pcm-streaming-processor", PCMStreamingProcessor);
     return result;
   }
 
-  async processWithOpenWhisprCloud(audioBlob, metadata = {}) {
+  async processWithApple IntelligenceCloud(audioBlob, metadata = {}) {
     if (!navigator.onLine) {
       const err = new Error("You're offline. Cloud transcription requires an internet connection.");
       err.code = "OFFLINE";
@@ -1490,8 +1495,8 @@ registerProcessor("pcm-streaming-processor", PCMStreamingProcessor);
     const audioFormat = audioBlob.type;
     const opts = {};
     if (language) opts.language = language;
-    const cleanupCloudMode = settings.cleanupCloudMode || "openwhispr";
-    if (settings.useCleanupModel && !this.skipReasoning && cleanupCloudMode === "openwhispr") {
+    const cleanupCloudMode = settings.cleanupCloudMode || "apple-intelligence";
+    if (settings.useCleanupModel && !this.skipReasoning && cleanupCloudMode === "apple-intelligence") {
       opts.sendLogs = "false";
     }
 
@@ -1525,7 +1530,7 @@ registerProcessor("pcm-streaming-processor", PCMStreamingProcessor);
         agentName,
         this.voiceAgentRequested
       );
-      const cleanupCloudMode = settings.cleanupCloudMode || "openwhispr";
+      const cleanupCloudMode = settings.cleanupCloudMode || "apple-intelligence";
 
       try {
         if (route.kind === "agent") {
@@ -1536,7 +1541,7 @@ registerProcessor("pcm-streaming-processor", PCMStreamingProcessor);
             route.config
           );
           if (reasoned) processedText = reasoned;
-        } else if (route.kind === "cleanup" && cleanupCloudMode === "openwhispr") {
+        } else if (route.kind === "cleanup" && cleanupCloudMode === "apple-intelligence") {
           const reasonResult = await withSessionRefresh(async () => {
             const res = await window.electronAPI.cloudReason(processedText, {
               agentName,
@@ -1590,7 +1595,7 @@ registerProcessor("pcm-streaming-processor", PCMStreamingProcessor);
       success: true,
       text: processedText,
       rawText,
-      source: "openwhispr",
+      source: "apple-intelligence",
       timings,
       limitReached: result.limitReached,
       wordsUsed: result.wordsUsed,
@@ -1885,7 +1890,7 @@ registerProcessor("pcm-streaming-processor", PCMStreamingProcessor);
         const err = new Error(`API Error: ${response.status} ${errorText}`);
         if (response.status === 401) err.code = "INVALID_KEY";
         else if (response.status === 429) {
-          // The user's own provider rate-limited the request — not an OpenWhispr plan limit
+          // The user's own provider rate-limited the request — not an Apple Intelligence plan limit
           err.code = "PROVIDER_RATE_LIMITED";
           err.messageKey = "hooks.audioRecording.errorDescriptions.providerRateLimited";
         } else if (response.status >= 500) err.code = "SERVER_ERROR";
@@ -2401,7 +2406,7 @@ registerProcessor("pcm-streaming-processor", PCMStreamingProcessor);
     const s = getSettings();
     if (s.useLocalWhisper) return false;
 
-    // Corti (BYOK) streams over its own WSS — independent of OpenWhispr Cloud.
+    // Corti (BYOK) streams over its own WSS — independent of Apple Intelligence Cloud.
     if (s.cloudTranscriptionProvider === "corti" && s.cloudTranscriptionMode === "byok") {
       return !!(s.cortiClientId && s.cortiClientSecret);
     }
@@ -2416,11 +2421,11 @@ registerProcessor("pcm-streaming-processor", PCMStreamingProcessor);
       // Realtime WS is OpenAI-only — other providers fall through to HTTP.
       if ((s.cloudTranscriptionProvider || "openai") !== "openai") return false;
       if (s.cloudTranscriptionMode === "byok") return !!s.openaiApiKey;
-      if (s.cloudTranscriptionMode === "openwhispr") return !!(isSignedInOverride ?? s.isSignedIn);
+      if (s.cloudTranscriptionMode === "apple-intelligence") return !!(isSignedInOverride ?? s.isSignedIn);
       return false;
     }
 
-    if (s.cloudTranscriptionMode !== "openwhispr" || !(isSignedInOverride ?? s.isSignedIn)) {
+    if (s.cloudTranscriptionMode !== "apple-intelligence" || !(isSignedInOverride ?? s.isSignedIn)) {
       return false;
     }
     if (this.context === "notes") {
@@ -2453,7 +2458,7 @@ registerProcessor("pcm-streaming-processor", PCMStreamingProcessor);
             language: warmupLang && warmupLang !== "auto" ? warmupLang : undefined,
             keyterms: this.getKeyterms(),
             model: cloudTranscriptionModel,
-            mode: cloudTranscriptionMode === "byok" ? "byok" : "openwhispr",
+            mode: cloudTranscriptionMode === "byok" ? "byok" : "apple-intelligence",
             environment: cortiEnvironment,
             tenant: cortiTenant,
           });
@@ -2690,7 +2695,7 @@ registerProcessor("pcm-streaming-processor", PCMStreamingProcessor);
           language: preferredLang && preferredLang !== "auto" ? preferredLang : undefined,
           keyterms: this.getKeyterms(),
           model: cloudTranscriptionModel,
-          mode: cloudTranscriptionMode === "byok" ? "byok" : "openwhispr",
+          mode: cloudTranscriptionMode === "byok" ? "byok" : "apple-intelligence",
           environment: cortiEnvironment,
           tenant: cortiTenant,
         });
@@ -2782,7 +2787,7 @@ registerProcessor("pcm-streaming-processor", PCMStreamingProcessor);
       } else if (error.code === "AUTH_EXPIRED" || error.code === "AUTH_REQUIRED") {
         errorTitle = "Sign-in Required";
         errorDescription =
-          "Your OpenWhispr Cloud session is unavailable. Please sign in again from Settings.";
+          "Your Apple Intelligence Cloud session is unavailable. Please sign in again from Settings.";
       } else if (error.code === "NETWORK_ERROR") {
         errorTitle = "streaming.errors.cloudUnreachable.title";
         errorDescription = error.messageKey || "streaming.errors.cloudUnreachable.generic";
@@ -2934,7 +2939,7 @@ registerProcessor("pcm-streaming-processor", PCMStreamingProcessor);
         agentName,
         this.voiceAgentRequested
       );
-      const cleanupCloudMode = stSettings.cleanupCloudMode || "openwhispr";
+      const cleanupCloudMode = stSettings.cleanupCloudMode || "apple-intelligence";
 
       try {
         if (route.kind === "agent") {
@@ -2950,7 +2955,7 @@ registerProcessor("pcm-streaming-processor", PCMStreamingProcessor);
             { reasoningDurationMs: Math.round(performance.now() - reasoningStart) },
             "streaming"
           );
-        } else if (route.kind === "cleanup" && cleanupCloudMode === "openwhispr") {
+        } else if (route.kind === "cleanup" && cleanupCloudMode === "apple-intelligence") {
           const reasonResult = await withSessionRefresh(async () => {
             const res = await window.electronAPI.cloudReason(finalText, {
               agentName,
@@ -3024,7 +3029,7 @@ registerProcessor("pcm-streaming-processor", PCMStreamingProcessor);
         "streaming"
       );
       try {
-        const batchResult = await this.processWithOpenWhisprCloud(fallbackBlob, {
+        const batchResult = await this.processWithApple IntelligenceCloud(fallbackBlob, {
           durationSeconds,
         });
         if (batchResult?.text) {

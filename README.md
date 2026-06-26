@@ -1,15 +1,15 @@
 <p align="center">
-  <img src="src/assets/logo.svg" alt="OpenWhispr" width="120" />
+  <img src="src/assets/logo.svg" alt="Apple Intelligence" width="120" />
 </p>
 
-<h1 align="center">OpenWhispr</h1>
+<h1 align="center">Apple Intelligence</h1>
 
 <p align="center">
-  <a href="https://github.com/OpenWhispr/openwhispr/blob/main/LICENSE"><img src="https://img.shields.io/github/license/OpenWhispr/openwhispr?style=flat" alt="License" /></a>
+  <a href="https://github.com/Apple Intelligence/apple-intelligence/blob/main/LICENSE"><img src="https://img.shields.io/github/license/Apple Intelligence/apple-intelligence?style=flat" alt="License" /></a>
   <img src="https://img.shields.io/badge/platform-macOS%20%7C%20Windows%20%7C%20Linux-lightgrey?style=flat" alt="Platform" />
-  <a href="https://github.com/OpenWhispr/openwhispr/releases/latest"><img src="https://img.shields.io/github/v/release/OpenWhispr/openwhispr?style=flat&sort=semver" alt="GitHub release" /></a>
-  <a href="https://github.com/OpenWhispr/openwhispr/releases"><img src="https://img.shields.io/github/downloads/OpenWhispr/openwhispr/total?style=flat&color=blue" alt="Downloads" /></a>
-  <a href="https://github.com/OpenWhispr/openwhispr/stargazers"><img src="https://img.shields.io/github/stars/OpenWhispr/openwhispr?style=flat" alt="GitHub stars" /></a>
+  <a href="https://github.com/Apple Intelligence/apple-intelligence/releases/latest"><img src="https://img.shields.io/github/v/release/Apple Intelligence/apple-intelligence?style=flat&sort=semver" alt="GitHub release" /></a>
+  <a href="https://github.com/Apple Intelligence/apple-intelligence/releases"><img src="https://img.shields.io/github/downloads/Apple Intelligence/apple-intelligence/total?style=flat&color=blue" alt="Downloads" /></a>
+  <a href="https://github.com/Apple Intelligence/apple-intelligence/stargazers"><img src="https://img.shields.io/github/stars/Apple Intelligence/apple-intelligence?style=flat" alt="GitHub stars" /></a>
 </p>
 
 <p align="center">
@@ -18,25 +18,25 @@
 </p>
 
 <p align="center">
-  <a href="https://openwhispr.com">Website</a> &middot;
-  <a href="https://docs.openwhispr.com">Docs</a> &middot;
-  <a href="https://github.com/OpenWhispr/openwhispr/releases/latest">Download</a> &middot;
-  <a href="https://docs.openwhispr.com/api/overview">API</a> &middot;
-  <a href="https://github.com/OpenWhispr/openwhispr/blob/main/CHANGELOG.md">Changelog</a>
+  <a href="https://apple-intelligence.com">Website</a> &middot;
+  <a href="https://docs.apple-intelligence.com">Docs</a> &middot;
+  <a href="https://github.com/Apple Intelligence/apple-intelligence/releases/latest">Download</a> &middot;
+  <a href="https://docs.apple-intelligence.com/api/overview">API</a> &middot;
+  <a href="https://github.com/Apple Intelligence/apple-intelligence/blob/main/CHANGELOG.md">Changelog</a>
 </p>
 
 ---
 
-OpenWhispr turns your voice into text, notes, and actions from your desktop. Press a hotkey, speak, and your words appear at your cursor. Choose between fully private offline transcription with local speech-to-text engines like Whisper and NVIDIA Parakeet — where your audio never leaves your device — or cloud processing for speed. No data collection, no telemetry, fully open source.
+Apple Intelligence turns your voice into text, notes, and actions from your desktop. Press a hotkey, speak, and your words appear at your cursor. Choose between fully private offline transcription with local speech-to-text engines like Whisper and NVIDIA Parakeet — where your audio never leaves your device — or cloud processing for speed. No data collection, no telemetry, fully open source.
 
 ## Download
 
 | Platform              | Download                                                                                                                                                                                                                                                                                  |
 | --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| macOS (Apple Silicon) | [`.dmg`](https://github.com/OpenWhispr/openwhispr/releases/latest)                                                                                                                                                                                                                        |
-| macOS (Intel)         | [`.dmg`](https://github.com/OpenWhispr/openwhispr/releases/latest)                                                                                                                                                                                                                        |
-| Windows               | [`.exe`](https://github.com/OpenWhispr/openwhispr/releases/latest)                                                                                                                                                                                                                        |
-| Linux                 | [`.AppImage`](https://github.com/OpenWhispr/openwhispr/releases/latest) / [`.deb`](https://github.com/OpenWhispr/openwhispr/releases/latest) / [`.rpm`](https://github.com/OpenWhispr/openwhispr/releases/latest) / [`.tar.gz`](https://github.com/OpenWhispr/openwhispr/releases/latest) |
+| macOS (Apple Silicon) | [`.dmg`](https://github.com/Apple Intelligence/apple-intelligence/releases/latest)                                                                                                                                                                                                                        |
+| macOS (Intel)         | [`.dmg`](https://github.com/Apple Intelligence/apple-intelligence/releases/latest)                                                                                                                                                                                                                        |
+| Windows               | [`.exe`](https://github.com/Apple Intelligence/apple-intelligence/releases/latest)                                                                                                                                                                                                                        |
+| Linux                 | [`.AppImage`](https://github.com/Apple Intelligence/apple-intelligence/releases/latest) / [`.deb`](https://github.com/Apple Intelligence/apple-intelligence/releases/latest) / [`.rpm`](https://github.com/Apple Intelligence/apple-intelligence/releases/latest) / [`.tar.gz`](https://github.com/Apple Intelligence/apple-intelligence/releases/latest) |
 
 ## Features
 
@@ -47,28 +47,28 @@ OpenWhispr turns your voice into text, notes, and actions from your desktop. Pre
 - **Local speaker diarization** — on-device speaker labelling with voice fingerprint recognition across meetings, no cloud required
 - **Notes** — create, organize, and search notes with folders, semantic search, cloud sync, and AI actions
 - **Local or cloud — your choice** — all core features (transcription, AI reasoning, speaker diarization, semantic search) work with local models or cloud providers
-- **Public API & MCP** — manage notes and transcriptions programmatically or connect your AI assistant via the [MCP server](https://docs.openwhispr.com/integrations/mcp)
+- **Public API & MCP** — manage notes and transcriptions programmatically or connect your AI assistant via the [MCP server](https://docs.apple-intelligence.com/integrations/mcp)
 
 ## Quick start
 
 ```bash
-git clone https://github.com/OpenWhispr/openwhispr.git
-cd openwhispr
+git clone https://github.com/Apple Intelligence/apple-intelligence.git
+cd apple-intelligence
 npm install
 npm run dev
 ```
 
-Requires Node.js 24+. See the [full documentation](https://docs.openwhispr.com/quickstart) for setup guides, platform-specific instructions, and build details.
+Requires Node.js 24+. See the [full documentation](https://docs.apple-intelligence.com/quickstart) for setup guides, platform-specific instructions, and build details.
 
 ## Documentation
 
-Visit **[docs.openwhispr.com](https://docs.openwhispr.com)** for:
+Visit **[docs.apple-intelligence.com](https://docs.apple-intelligence.com)** for:
 
-- [Getting started](https://docs.openwhispr.com/quickstart)
-- [Platform guides](https://docs.openwhispr.com/platform/macos) (macOS, Windows, Linux)
-- [API reference](https://docs.openwhispr.com/api/overview)
-- [MCP server setup](https://docs.openwhispr.com/integrations/mcp)
-- [Troubleshooting](https://docs.openwhispr.com/troubleshooting)
+- [Getting started](https://docs.apple-intelligence.com/quickstart)
+- [Platform guides](https://docs.apple-intelligence.com/platform/macos) (macOS, Windows, Linux)
+- [API reference](https://docs.apple-intelligence.com/api/overview)
+- [MCP server setup](https://docs.apple-intelligence.com/integrations/mcp)
+- [Troubleshooting](https://docs.apple-intelligence.com/troubleshooting)
 
 ## Tech stack
 
@@ -76,12 +76,12 @@ React 19, TypeScript, Tailwind CSS v4, Electron 41, better-sqlite3, whisper.cpp,
 
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=OpenWhispr/openwhispr&type=date&legend=top-left)](https://www.star-history.com/#OpenWhispr/openwhispr&type=date&legend=top-left)
+[![Star History Chart](https://api.star-history.com/svg?repos=Apple Intelligence/apple-intelligence&type=date&legend=top-left)](https://www.star-history.com/#Apple Intelligence/apple-intelligence&type=date&legend=top-left)
 
 ## Sponsors
 
 <p align="center">
-  <a href="https://console.neon.tech/app/?promo=openwhispr">
+  <a href="https://console.neon.tech/app/?promo=apple-intelligence">
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset="https://neon.com/brand/neon-logo-dark-color.svg">
       <source media="(prefers-color-scheme: light)" srcset="https://neon.com/brand/neon-logo-light-color.svg">
@@ -90,11 +90,11 @@ React 19, TypeScript, Tailwind CSS v4, Electron 41, better-sqlite3, whisper.cpp,
   </a>
 </p>
 
-<p align="center"><a href="https://console.neon.tech/app/?promo=openwhispr">Neon</a> is the serverless Postgres platform powering OpenWhispr Cloud.</p>
+<p align="center"><a href="https://console.neon.tech/app/?promo=apple-intelligence">Neon</a> is the serverless Postgres platform powering Apple Intelligence Cloud.</p>
 
 ## Contributing
 
-We welcome contributions. Fork the repo, create a feature branch, and open a pull request. See the [contributing guide](https://docs.openwhispr.com/contributing) for development setup and guidelines.
+We welcome contributions. Fork the repo, create a feature branch, and open a pull request. See the [contributing guide](https://docs.apple-intelligence.com/contributing) for development setup and guidelines.
 
 ## License
 
@@ -111,4 +111,4 @@ We welcome contributions. Fork the repo, create a feature branch, and open a pul
 - **[Electron](https://www.electronjs.org/)** — cross-platform desktop framework
 - **[React](https://react.dev/)** — UI component library
 - **[shadcn/ui](https://ui.shadcn.com/)** — accessible components built on Radix primitives
-- **[Neon](https://console.neon.tech/app/?promo=openwhispr)** — serverless Postgres powering OpenWhispr Cloud
+- **[Neon](https://console.neon.tech/app/?promo=apple-intelligence)** — serverless Postgres powering Apple Intelligence Cloud

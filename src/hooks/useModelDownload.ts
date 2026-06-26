@@ -95,8 +95,8 @@ export function useModelDownload({
 
   useEffect(() => {
     const handleModelsCleared = () => onModelsClearedRef.current?.();
-    window.addEventListener("openwhispr-models-cleared", handleModelsCleared);
-    return () => window.removeEventListener("openwhispr-models-cleared", handleModelsCleared);
+    window.addEventListener("apple-intelligence-models-cleared", handleModelsCleared);
+    return () => window.removeEventListener("apple-intelligence-models-cleared", handleModelsCleared);
   }, []);
 
   const handleWhisperProgress = useCallback(

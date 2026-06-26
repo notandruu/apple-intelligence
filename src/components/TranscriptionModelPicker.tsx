@@ -245,7 +245,7 @@ const PROVIDER_CREDENTIALS: Record<
     fields: [{ key: "mistralApiKey", input: "secret" }],
   },
   corti: {
-    consoleUrl: "https://www.corti.ai/?utm_source=referral&utm_content=&utm_campaign=openwhispr",
+    consoleUrl: "https://www.corti.ai/?utm_source=referral&utm_content=&utm_campaign=apple-intelligence",
     fields: [
       { key: "cortiClientId", input: "secret", labelKey: "transcription.corti.clientId" },
       { key: "cortiClientSecret", input: "secret", labelKey: "transcription.corti.clientSecret" },
@@ -519,8 +519,8 @@ export default function TranscriptionModelPicker({
       loadLocalModels();
       loadParakeetModels();
     };
-    window.addEventListener("openwhispr-models-cleared", handleModelsCleared);
-    return () => window.removeEventListener("openwhispr-models-cleared", handleModelsCleared);
+    window.addEventListener("apple-intelligence-models-cleared", handleModelsCleared);
+    return () => window.removeEventListener("apple-intelligence-models-cleared", handleModelsCleared);
   }, [loadLocalModels, loadParakeetModels]);
 
   useEffect(() => {

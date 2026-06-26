@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.7.3] - 2026-06-23
 
-A big release: two new transcription providers (Corti for clinical-grade medical dictation and xAI), a reworked onboarding flow built around what you'll use OpenWhispr for, spoken Snippets, a dedicated Voice Agent hotkey, a redesigned dictionary with cross-device sync, dedicated Audio Upload transcription settings, discarded-dictation history, OS-level notification controls, Linux PipeWire system-audio capture, new AI models, and a stack of fixes across paste, audio, settings, and Linux window managers.
+A big release: two new transcription providers (Corti for clinical-grade medical dictation and xAI), a reworked onboarding flow built around what you'll use Apple Intelligence for, spoken Snippets, a dedicated Voice Agent hotkey, a redesigned dictionary with cross-device sync, dedicated Audio Upload transcription settings, discarded-dictation history, OS-level notification controls, Linux PipeWire system-audio capture, new AI models, and a stack of fixes across paste, audio, settings, and Linux window managers.
 
 ### Transcription
 
@@ -21,7 +21,7 @@ A big release: two new transcription providers (Corti for clinical-grade medical
 - **xAI speech-to-text.** Added xAI as a cloud transcription provider. (#942)
 - **Corti onboarding polish.** Added the Corti provider icon, and the "Get a key" link plus the onboarding Corti links now point to the corti.ai homepage with referral UTM tracking instead of the bare console.
 - **Self-hosted servers skip the API-key check** so local / self-hosted transcription endpoints work without a key. (#835)
-- **Dedicated Audio Upload transcription settings.** Uploaded audio files now have their own Speech-to-Text context (Settings → Speech-to-Text → Audio Upload) with an independent provider and model, split out from dictation the same way Note Recording was. Existing users' dictation preference is migrated over; new users default to OpenWhispr Cloud.
+- **Dedicated Audio Upload transcription settings.** Uploaded audio files now have their own Speech-to-Text context (Settings → Speech-to-Text → Audio Upload) with an independent provider and model, split out from dictation the same way Note Recording was. Existing users' dictation preference is migrated over; new users default to Apple Intelligence Cloud.
 - **Cancel an in-progress audio-file transcription** from the upload screen — cancelling returns to the upload view and discards the result so nothing is saved.
 
 ### Reasoning & models
@@ -41,14 +41,14 @@ A big release: two new transcription providers (Corti for clinical-grade medical
 
 ### Onboarding
 
-- **Intent capture up front.** A new "About you" step lets you multi-select what you'll use OpenWhispr for — dictation, meetings, healthcare, translation, AI commands, or uploading audio — and the rest of onboarding adapts to your choices.
+- **Intent capture up front.** A new "About you" step lets you multi-select what you'll use Apple Intelligence for — dictation, meetings, healthcare, translation, AI commands, or uploading audio — and the rest of onboarding adapts to your choices.
 - **Inline Corti setup for healthcare.** Picking healthcare surfaces Corti on the finish step — enter Corti credentials right there or open Settings with the Corti provider preselected, with a "Skip for now" escape.
 - **Skippable optional steps**, onboarding progress moved into the macOS title bar, the quit button removed from the title bar, a back-to-sign-in escape on email verification, and ghost-variant styling for subtle auth actions.
 - **Provider chips styling fix** on the notes onboarding screen. (#916)
 
 ### Settings & notifications
 
-- **OS-level notification controls.** New settings to scope which OS-level interruptions OpenWhispr raises. (#781)
+- **OS-level notification controls.** New settings to scope which OS-level interruptions Apple Intelligence raises. (#781)
 - **Remove button for the agent hotkey.** (#824)
 - **Simpler meeting detection.** Audio-based meeting detection is now driven by the notification toggle (`notificationsEnabled && notifyMeetingDetection`) instead of a separate Audio Detection setting; the standalone setting, its UI section, and the now-dead detection translations were removed so a detector can't burn CPU while notifications are off.
 - **Settings no longer grabs the microphone.** Opening Settings used to call `getUserMedia` to read device labels, which started a mic session and interrupted other audio (e.g. paused music on macOS). It now enumerates devices first and only falls back to `getUserMedia` when labels are missing because permission hasn't been granted.
@@ -74,7 +74,7 @@ A big release: two new transcription providers (Corti for clinical-grade medical
 - **Local semantic search restored in packaged builds.** A regression that broke on-device semantic note search in packaged (production) builds is fixed. (#981)
 - **Faster local transcription:** the bundled Whisper server now auto-tunes its thread count to the machine. (#994)
 - **Accurate live speaker counts in note recordings** — per-segment "Speaker N" labels no longer climb past the expected speaker count, and the recorder panel now follows the cursor to the active monitor. (#967)
-- **Cloud users no longer need to manually pick a model** for the Voice Agent hotkey or note formatting — both now reach the OpenWhispr cloud agent without an explicitly selected model.
+- **Cloud users no longer need to manually pick a model** for the Voice Agent hotkey or note formatting — both now reach the Apple Intelligence cloud agent without an explicitly selected model.
 - **No stale clipboard restores during paste**, and cloud requests that hit a stale auth token now recover via the session cookie (fixes onboarding intent silently failing to save after email/password sign-in).
 
 ## [1.7.2] - 2026-05-20
@@ -122,7 +122,7 @@ A follow-up to 1.7.0 with a stronger encryption key for stored secrets, end-to-e
 - **Voice Agent rename.** The Dictation Agent tab and toggle are now labeled "Voice Agent" in all 10 locales; the internal `dictationAgent` identifiers are unchanged. The agent system prompt was compressed ~2700 → ~1200 chars now that name detection (`detectAgentName`) handles routing.
 - **Custom prompts sync across windows without restart.** Storage events for `customPrompt.*` keys now propagate Control Panel edits to the Main Window immediately.
 - **Side-panel layout flip is scoped to the notes view with an active note.** It no longer leaks onto Home, Chat, or Upload when the window is narrow; the layout now also flips correctly when you drag the window narrow on an open note and reverts on widen.
-- **Dictation overlay can't steal focus on Linux WMs.** The floating icon is now `focusable: false`, the cross-platform equivalent of the `no_focus [instance="open-whispr"]` workaround Sway/i3/wlroots users were applying by hand. Mouse clicks on mic and cancel still work; auto-paste no longer breaks because the original text field stays focused.
+- **Dictation overlay can't steal focus on Linux WMs.** The floating icon is now `focusable: false`, the cross-platform equivalent of the `no_focus [instance="apple-intelligence"]` workaround Sway/i3/wlroots users were applying by hand. Mouse clicks on mic and cancel still work; auto-paste no longer breaks because the original text field stays focused.
 - **Meeting-detected "Start Recording" no longer races on a fresh control panel.** The main process used to fire the `navigate-to-meeting-note` IPC after `did-finish-load` but before React mounted its listener, so the click was silently lost on a newly-created window. Now uses the same store-and-drain handshake the notification window already follows.
 
 ### Reasoning & local LLMs
@@ -149,7 +149,7 @@ A follow-up to 1.7.0 with a stronger encryption key for stored secrets, end-to-e
 ### Streaming & cloud
 
 - **OpenAI Realtime GA migration complete.** OpenAI removed the Realtime Beta API on 2026-05-12. 1.7.0 dropped the `OpenAI-Beta` header but kept the Beta wire format — transcription still broke because the GA server emits `session.created` / `session.updated` (not `transcription_session.*`) and rejects `transcription_session.update` in favor of `session.update` with `session.type=transcription` and a nested `audio.input.*` schema. The two server-event handlers and the session configuration payload are now on the GA shape. Closes #805.
-- **Graceful fallback when the OpenWhispr API URL is unconfigured.** `postServerToken` now attaches a `NO_API` code so `startStreamingRecording` can fall back to batch recording instead of surfacing an unhandled error.
+- **Graceful fallback when the Apple Intelligence API URL is unconfigured.** `postServerToken` now attaches a `NO_API` code so `startStreamingRecording` can fall back to batch recording instead of surfacing an unhandled error.
 
 ### Networking & proxies
 
@@ -166,8 +166,8 @@ A follow-up to 1.7.0 with a stronger encryption key for stored secrets, end-to-e
 - **Pop!OS COSMIC is forced to XWayland.** COSMIC's `XDG_CURRENT_DESKTOP=COSMIC` fell outside the relaunch allowlist, so the app ran as a native Wayland client — breaking the orb's initial placement and drag. Now handled like GNOME and KDE.
 - **Terminal detection on GNOME Wayland** now uses AT-SPI2 instead of the X11 selection heuristic, restoring `Ctrl+Shift+V` auto-paste for native Wayland terminal emulators. Fixes #725.
 - **Konsole on X11 auto-paste fixed.** Konsole intermittently reports no `WM_CLASS` via `xdotool`, so terminal detection went blind and fell through to `Ctrl+V` — which AI terminal agents like Codex and Claude Code interpret as image-paste, producing "No image found in clipboard" instead of pasting text. Detection now reads `/proc/<pid>/comm` as a complementary signal, and Konsole + X11 specifically routes through `xdotool windowactivate --sync key shift+Insert` (the XTest `Ctrl+Shift+V` path was being silently dropped by a long-standing focus/grab quirk). Closes #184; original patch and root-cause by @JGKle.
-- **Linux launcher symlinks** (e.g. `/usr/bin/open-whispr` → `/opt/OpenWhispr/open-whispr` from deb/rpm packages) no longer fail with "No such file or directory" — the wrapper now resolves the symlink target before sourcing.
-- **Windows: llama.cpp pinned to b8857** to keep `whisper-server.exe` (frozen at OpenWhispr/whisper.cpp 0.0.6) loading correctly. A llama.cpp release between b8861 and b9020 bumped ggml's ABI, leaving local Whisper users on 1.7.0 unable to transcribe; the download script now requests b8857 explicitly.
+- **Linux launcher symlinks** (e.g. `/usr/bin/apple-intelligence` → `/opt/Apple Intelligence/apple-intelligence` from deb/rpm packages) no longer fail with "No such file or directory" — the wrapper now resolves the symlink target before sourcing.
+- **Windows: llama.cpp pinned to b8857** to keep `whisper-server.exe` (frozen at Apple Intelligence/whisper.cpp 0.0.6) loading correctly. A llama.cpp release between b8861 and b9020 bumped ggml's ABI, leaving local Whisper users on 1.7.0 unable to transcribe; the download script now requests b8857 explicitly.
 - **Port availability check probes the wildcard address (`0.0.0.0` / `::`)** so sidecars don't false-positive on a free port when something is already bound on all interfaces. Resolved with a consolidated `serverUtils.isPortAvailable` with IPv6 probe. Closes #748.
 
 ### Docs & contributor experience
@@ -183,10 +183,10 @@ A big release: new sign-in options, smoother meeting recording, faster cross-dev
 
 - **Sign in with Microsoft** — new on this release, alongside Google and email/password.
 - **Sign in with Apple** on macOS — native Apple ID flow.
-- **Self-hosted authentication.** Sign-in now runs entirely on OpenWhispr infrastructure (we replaced Neon Auth with [Better Auth](https://better-auth.com) at `auth.openwhispr.com`). No third-party vendor lock-in. Self-hosters can point at their own server via `VITE_AUTH_URL`.
+- **Self-hosted authentication.** Sign-in now runs entirely on Apple Intelligence infrastructure (we replaced Neon Auth with [Better Auth](https://better-auth.com) at `auth.apple-intelligence.com`). No third-party vendor lock-in. Self-hosters can point at their own server via `VITE_AUTH_URL`.
 - **Bearer-token sessions** stored in your OS keychain replace the old browser-style cookie jar, so signed-in state survives renderer crashes and Electron session resets. Existing 1.7.x users transition silently on first launch.
-- **Forgot password** opens a browser tab to `openwhispr.com/reset-password` instead of an in-app form, matching how every other reset flow works on the web.
-- **Sign-in buttons disable with a tooltip** when the OS hasn't registered the `openwhispr://` callback handler, so OAuth never gets stuck without a return path.
+- **Forgot password** opens a browser tab to `apple-intelligence.com/reset-password` instead of an in-app form, matching how every other reset flow works on the web.
+- **Sign-in buttons disable with a tooltip** when the OS hasn't registered the `apple-intelligence://` callback handler, so OAuth never gets stuck without a return path.
 
 ### Security
 
@@ -201,7 +201,7 @@ A big release: new sign-in options, smoother meeting recording, faster cross-dev
 - **Side-panel layout is opt-in.** A new hotkey-only layout setting (full-width or side-panel) controls whether hotkey-triggered recordings snap the window to a 1/3 panel. Manual record-from-note and calendar joins always open full-width and auto-flip to side-panel only when the window narrows below 1024px.
 - **Per-note diarization preferences persist.** Mid-session toggles for "label speakers" and the "others in call" stepper are saved against the note, so a stop/resume keeps your choices instead of falling back to the global default.
 - **Meeting metadata syncs across devices.** Participants, calendar event ID, diarization toggle, and expected speaker count now travel through cloud sync alongside note content. Older clients that don't send these fields keep working — the columns are nullable and treated as optional server-side.
-- **Three interchangeable streaming providers**: OpenAI Realtime, AssemblyAI Universal-3 Pro, and Deepgram. Which providers are available is set on the OpenWhispr server, so there's no desktop-side toggle to keep in sync.
+- **Three interchangeable streaming providers**: OpenAI Realtime, AssemblyAI Universal-3 Pro, and Deepgram. Which providers are available is set on the Apple Intelligence server, so there's no desktop-side toggle to keep in sync.
 - **Cleaner mic capture.** A new acoustic gate prevents system audio from leaking into your mic during meetings. Speech onsets are protected so your voice isn't clipped at the start of a sentence.
 - **Better echo cancellation** with built-in noise suppression in the same pass.
 - **Speaker labels capped to attendee count** — no more phantom "Speaker 3+" labels in 1-on-1s and small groups.
@@ -236,7 +236,7 @@ A big release: new sign-in options, smoother meeting recording, faster cross-dev
 
 ### CLI
 
-- **Local HTTP bridge** for the `openwhispr` CLI: when the desktop is running, CLI commands hit it directly for note/folder/transcription operations and only fall back to the cloud API if the desktop is closed. Bearer-token auth, 127.0.0.1-only.
+- **Local HTTP bridge** for the `apple-intelligence` CLI: when the desktop is running, CLI commands hit it directly for note/folder/transcription operations and only fall back to the cloud API if the desktop is closed. Bearer-token auth, 127.0.0.1-only.
 
 ### Network
 
@@ -256,15 +256,15 @@ A big release: new sign-in options, smoother meeting recording, faster cross-dev
 
 ### macOS / Windows: bundle identifier change
 
-The app's bundle ID changed from `com.herotools.openwispr` to `com.gizmolabs.openwhispr` to match our new legal entity (Gizmo Labs Inc.) and fix the long-standing typo. Your notes, settings, API keys, and downloaded models carry over automatically on first launch.
+The app's bundle ID changed from `com.herotools.openwispr` to `com.gizmolabs.apple-intelligence` to match our new legal entity (Gizmo Labs Inc.) and fix the long-standing typo. Your notes, settings, API keys, and downloaded models carry over automatically on first launch.
 
-**Auto-update from 1.6.x cannot reach this release.** Please download the new build manually from [openwhispr.com/download](https://openwhispr.com/download).
+**Auto-update from 1.6.x cannot reach this release.** Please download the new build manually from [apple-intelligence.com/download](https://apple-intelligence.com/download).
 
 A one-time onboarding modal walks you through re-granting Microphone, Accessibility, and System Audio permissions on macOS.
 
 ### Upgrade notes
 
-- 1.6.x users: download manually from [openwhispr.com/download](https://openwhispr.com/download).
+- 1.6.x users: download manually from [apple-intelligence.com/download](https://apple-intelligence.com/download).
 - You'll be signed out and need to sign in again.
 - macOS: re-grant Microphone in-app and Accessibility + Screen Recording in System Settings.
 - Self-hosters: rename `VITE_NEON_AUTH_URL` → `VITE_AUTH_URL`; rename the legacy reasoning-model env vars (e.g. `REASONING_MODEL` → `CLEANUP_MODEL`); rename `AGENT_KEY` → `CHAT_AGENT_KEY`. Both old and new names work for two releases.
@@ -284,7 +284,7 @@ A one-time onboarding modal walks you through re-granting Microphone, Accessibil
 - **Settings Reorganization**: "AI Models" collapsed into Speech-to-Text and Language Models; "Speech & AI" sidebar group renamed to "AI Models"; Meetings section added with its own sub-tabs; multiple redundant headers removed (sidebar "Settings", Agent Mode, enterprise provider-tabs wrapper, system-prompt textarea wrapper)
 - **Agent Hotkey Relocated**: Moved into the Hotkeys section where it belongs, no longer orphaned under Agent Mode
 - **MCP Pro Gating**: Free users see an upgrade message on the MCP card instead of operational-looking setup steps; paid users get the full flow
-- **README Reframed**: Positions OpenWhispr as an open-source alternative to WisprFlow (dictation) and Granola (meetings)
+- **README Reframed**: Positions Apple Intelligence as an open-source alternative to WisprFlow (dictation) and Granola (meetings)
 - **Meeting Sub-tabs Simplified**: Engine selectors now shown directly; "follow main settings" toggles dropped. A one-time migration preserves every existing user's behavior with zero breaking changes
 
 ### Fixed
@@ -525,7 +525,7 @@ A one-time onboarding modal walks you through re-granting Microphone, Accessibil
 
 ### Changed
 
-- **System Audio Permission Clarity**: Renamed "Screen Recording" to "System Audio" across all permission prompts, onboarding, and settings — makes it clear that OpenWhispr captures other participants' audio, not your screen
+- **System Audio Permission Clarity**: Renamed "Screen Recording" to "System Audio" across all permission prompts, onboarding, and settings — makes it clear that Apple Intelligence captures other participants' audio, not your screen
 - **Improved Permission Copy**: Microphone permission now reads "Captures your voice for transcription"; System Audio reads "Captures other participants' audio from calls and meetings. We never record your screen."
 - **Electron 39**: Upgraded from Electron 36 to 39, which uses the CoreAudio Tap API by default on macOS 14.2+ — eliminates the purple "screen recording" indicator, the "Your screen is being observed" lock screen message, and the misleading "Screen & System Audio Recording" permission prompt. Users now see "System Audio Recording Only" instead
 - **NSAudioCaptureUsageDescription**: Added the new macOS 14.2+ audio capture usage description to Info.plist, enabling the separate system audio permission dialog
@@ -775,7 +775,7 @@ A one-time onboarding modal walks you through re-granting Microphone, Accessibil
 - **Windows Push-to-Talk Refactor**: Moved PTT state management (hold timing, recording tracking, cooldown) from main process into `windowManager` for cleaner separation and consistency with macOS PTT patterns
 - **Audio Recording Reentrancy Guards**: Added lock refs to `useAudioRecording` start/stop to prevent concurrent calls from rapid key presses
 - **Synchronous Activation Mode**: `getActivationMode()` is now synchronous (reads from cache), removing unnecessary async overhead in all PTT and hotkey handlers
-- **Default Agent Name**: Set default agent name to OpenWhispr
+- **Default Agent Name**: Set default agent name to Apple Intelligence
 
 ### Fixed
 
@@ -787,7 +787,7 @@ A one-time onboarding modal walks you through re-granting Microphone, Accessibil
 ### Added
 
 - **Deepgram Streaming Liveness Check**: Detects unresponsive warm connections within 2.5s and transparently reconnects with audio replay
-- **Batch Transcription Fallback**: If streaming produces no text, automatically falls back to batch transcription via OpenWhispr Cloud
+- **Batch Transcription Fallback**: If streaming produces no text, automatically falls back to batch transcription via Apple Intelligence Cloud
 - **Full Locale Codes**: Pass full locale codes (e.g. en-US, zh-CN) to Deepgram instead of stripping to base codes, preserving dialect precision
 
 ### Fixed
@@ -950,7 +950,7 @@ A one-time onboarding modal walks you through re-granting Microphone, Accessibil
 
 ### Added
 
-- **OpenWhispr Cloud**: Cloud-native transcription service — sign in and transcribe without managing API keys
+- **Apple Intelligence Cloud**: Cloud-native transcription service — sign in and transcribe without managing API keys
   - Google OAuth and email/password authentication via Neon Auth
   - Email verification flow with polling and resend support
   - Password reset via email magic links
@@ -973,8 +973,8 @@ A one-time onboarding modal walks you through re-granting Microphone, Accessibil
   - Signed-in users get a streamlined 3-step flow (Welcome → Setup → Activation)
   - Non-signed-in users get a 4-step flow with transcription mode selection
   - Permissions merged into Setup step for signed-in users
-- **Transcription Mode Architecture**: Unified mode selection across OpenWhispr Cloud, Bring Your Own Key (BYOK), and Local
-  - Signed-in users default to OpenWhispr Cloud
+- **Transcription Mode Architecture**: Unified mode selection across Apple Intelligence Cloud, Bring Your Own Key (BYOK), and Local
+  - Signed-in users default to Apple Intelligence Cloud
   - Non-signed-in users choose between BYOK and Local
 - **Design System Overhaul**: Complete refactor of styling to use design tokens throughout the codebase
   - Button component now uses `text-foreground`, `bg-muted`, `border-border` instead of hardcoded hex values
@@ -1347,7 +1347,7 @@ A one-time onboarding modal walks you through re-granting Microphone, Accessibil
 
 ### Added
 
-- Button to fully quit OpenWhispr processes from the application
+- Button to fully quit Apple Intelligence processes from the application
 - Linux terminal detection with automatic paste key switching (Ctrl+Shift+V for terminals)
 
 ### Changed
@@ -1361,7 +1361,7 @@ A one-time onboarding modal walks you through re-granting Microphone, Accessibil
 - Persist OpenAI key before onboarding test to prevent key loss during setup
 - Windows Python discovery now correctly handles output parsing
 - Keep FFmpeg debug schema as boolean type
-- Fixed OpenWhispr documentation paths
+- Fixed Apple Intelligence documentation paths
 - Windows: Resolved issue #16 with WAV validation, registry-based Python detection, and normalized FFmpeg paths
 
 ## [1.0.13] - 2025-12-24
@@ -1484,7 +1484,7 @@ A one-time onboarding modal walks you through re-granting Microphone, Accessibil
 - **macOS Window Lifecycle**: Ensured the dictation panel keeps the app visible in Dock and Command-Tab while retaining floating behaviour across spaces.
 - **Control Panel Stability**: Reworked close/minimize handling so the panel stays interactive when switching apps and reopens cleanly without spawning duplicate windows.
 - **Always-On-Top Enforcement**: Centralised the logic that reapplies floating window levels, eliminating redundant timers and focus quirks.
-- **Menu Labelling**: macOS application menu items now display the correct OpenWhispr casing instead of "open-whispr".
+- **Menu Labelling**: macOS application menu items now display the correct Apple Intelligence casing instead of "apple-intelligence".
 - **Non-mac Hotkey Guard**: Prevented the mac-only Globe shortcut from being saved on Windows/Linux.
 
 ## [1.0.5] - 2025-09-10
@@ -1688,7 +1688,7 @@ A one-time onboarding modal walks you through re-granting Microphone, Accessibil
 
 ### Added
 
-- Initial release of OpenWhispr (formerly OpenWispr)
+- Initial release of Apple Intelligence (formerly OpenWispr)
 - Desktop dictation application using OpenAI Whisper
 - Local and cloud-based speech-to-text transcription
 - Real-time audio recording and processing

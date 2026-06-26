@@ -1,5 +1,5 @@
 {
-  "name": "open-whispr",
+  "name": "apple-intelligence",
   "version": "1.7.3",
   "description": "A desktop dictation application using whisper.cpp for speech-to-text transcription",
   "main": "main.js",
@@ -84,8 +84,8 @@
     "desktop-app"
   ],
   "author": {
-    "name": "OpenWhispr Team",
-    "email": "support@openwhispr.com"
+    "name": "Apple Intelligence Team",
+    "email": "support@apple-intelligence.com"
   },
   "license": "MIT",
   "devDependencies": {
@@ -201,5 +201,8 @@
     "ip-address": "10.2.0",
     "markdown-it": "14.2.0",
     "tmp": "0.2.7"
+  },
+  "allowScripts": {
+    "better-sqlite3@12.9.0": true
   }
 }

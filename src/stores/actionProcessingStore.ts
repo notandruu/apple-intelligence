@@ -123,7 +123,7 @@ export function runBackgroundAction(
     try {
       const basePrompt = options.isMeetingNote ? MEETING_SYSTEM_PROMPT : BASE_SYSTEM_PROMPT;
       const settings = getSettings();
-      const provider = options.isCloudMode ? "openwhispr" : undefined;
+      const provider = options.isCloudMode ? "apple-intelligence" : undefined;
       const systemPrompt = appendDictionarySuffix(
         basePrompt + action.prompt,
         options.isMeetingNote ? settings.customDictionary : undefined,

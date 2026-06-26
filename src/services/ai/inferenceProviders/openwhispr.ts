@@ -3,8 +3,8 @@ import { withSessionRefresh } from "../../../lib/auth";
 import { getSettings } from "../../../stores/settingsStore";
 import logger from "../../../utils/logger";
 
-export const openwhisprProvider: InferenceProvider = {
-  id: "openwhispr",
+export const apple-intelligenceProvider: InferenceProvider = {
+  id: "apple-intelligence",
   async call({ text, model, agentName, config, ctx }) {
     logger.logReasoning("OPENWHISPR_START", { model, agentName });
 
@@ -24,7 +24,7 @@ export const openwhisprProvider: InferenceProvider = {
 
       if (!res?.success) {
         const err: Error & { code?: string } = new Error(
-          res?.error || "OpenWhispr cloud reasoning failed"
+          res?.error || "Apple Intelligence cloud reasoning failed"
         );
         err.code = res?.code;
         throw err;

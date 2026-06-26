@@ -1,10 +1,10 @@
 {
-  "appId": "com.gizmolabs.openwhispr",
+  "appId": "com.gizmolabs.apple-intelligence",
   "afterPack": "scripts/afterPack.js",
-  "productName": "OpenWhispr",
+  "productName": "Apple Intelligence",
   "protocols": {
-    "name": "OpenWhispr Protocol",
-    "schemes": ["openwhispr"]
+    "name": "Apple Intelligence Protocol",
+    "schemes": ["apple-intelligence"]
   },
   "directories": {
     "output": "dist"
@@ -146,10 +146,10 @@
     ],
     "extendInfo": {
       "LSUIElement": false,
-      "CFBundleIconName": "openwhispr",
-      "NSMicrophoneUsageDescription": "OpenWhispr uses the microphone to capture your voice for transcription.",
-      "NSAudioCaptureUsageDescription": "OpenWhispr uses system audio to capture other participants' audio from calls and meetings.",
-      "NSAccessibilityUsageDescription": "OpenWhispr needs accessibility permissions to paste transcribed text into other applications."
+      "CFBundleIconName": "apple-intelligence",
+      "NSMicrophoneUsageDescription": "Apple Intelligence uses the microphone to capture your voice for transcription.",
+      "NSAudioCaptureUsageDescription": "Apple Intelligence uses system audio to capture other participants' audio from calls and meetings.",
+      "NSAccessibilityUsageDescription": "Apple Intelligence needs accessibility permissions to paste transcribed text into other applications."
     }
   },
   "win": {
@@ -157,8 +157,8 @@
     "icon": "src/assets/icon.ico",
     "azureSignOptions": {
       "endpoint": "https://eus.codesigning.azure.net/",
-      "certificateProfileName": "openwhispr-release",
-      "codeSigningAccountName": "OpenWhispr",
+      "certificateProfileName": "apple-intelligence-release",
+      "codeSigningAccountName": "Apple Intelligence",
       "publisherName": "CN=Gizmo Labs Inc., O=Gizmo Labs Inc., L=Wilmington, S=Delaware, C=US"
     },
     "extraResources": [
@@ -242,7 +242,7 @@
     "include": "resources/nsis/cleanup-models.nsh"
   },
   "dmg": {
-    "title": "OpenWhispr",
+    "title": "Apple Intelligence",
     "icon": "src/assets/icon.icns",
     "window": {
       "width": 540,
@@ -251,8 +251,8 @@
   },
   "publish": {
     "provider": "github",
-    "owner": "OpenWhispr",
-    "repo": "openwhispr",
+    "owner": "Apple Intelligence",
+    "repo": "apple-intelligence",
     "private": false,
     "releaseType": "draft"
   }

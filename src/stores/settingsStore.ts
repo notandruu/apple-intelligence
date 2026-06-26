@@ -198,7 +198,7 @@ function deriveTranscriptionMode(
   if (cloudTranscriptionMode === "byok") {
     return cloudTranscriptionProvider === "custom" ? "self-hosted" : "providers";
   }
-  return "openwhispr";
+  return "apple-intelligence";
 }
 
 function migrateProviderSettings() {
@@ -223,7 +223,7 @@ function migrateProviderSettings() {
 
   const reasoningMode = localStorage.getItem("cloudReasoningMode");
   const reasoningProvider = localStorage.getItem("reasoningProvider");
-  let newReasoningMode: InferenceMode = "openwhispr";
+  let newReasoningMode: InferenceMode = "apple-intelligence";
   if (reasoningMode === "byok") {
     if (reasoningProvider === "custom") {
       newReasoningMode = "self-hosted";
@@ -261,7 +261,7 @@ migrateProviderSettings();
 // persists is available to copy. Before this context existed the upload page
 // used the base dictation settings, so copy each value the user actually set
 // into the matching `upload*` key. Fresh installs have no base keys persisted,
-// so nothing is copied and the upload context falls through to its OpenWhispr
+// so nothing is copied and the upload context falls through to its Apple Intelligence
 // Cloud defaults.
 const UPLOAD_TRANSCRIPTION_PAIRS: ReadonlyArray<[string, string]> = [
   ["useLocalWhisper", "uploadUseLocalWhisper"],
@@ -294,7 +294,7 @@ function migrateAgentMode() {
   const cloudAgentMode = localStorage.getItem("cloudAgentMode");
   const agentProvider = localStorage.getItem("agentProvider");
 
-  let agentInferenceMode: InferenceMode = "openwhispr";
+  let agentInferenceMode: InferenceMode = "apple-intelligence";
   if (cloudAgentMode === "byok") {
     const localProviders = ["qwen", "llama", "mistral", "openai-oss", "gemma"];
     if (agentProvider === "custom") {
@@ -848,8 +848,8 @@ export const useSettingsStore = create<SettingsState>()((set, get) => ({
   ),
   // Secrets aren't hydrated yet at construction; the BYOK default is set
   // post-hydration in initializeSettings.
-  cloudTranscriptionMode: readString("cloudTranscriptionMode", "openwhispr"),
-  cleanupCloudMode: readString("cleanupCloudMode", "openwhispr"),
+  cloudTranscriptionMode: readString("cloudTranscriptionMode", "apple-intelligence"),
+  cleanupCloudMode: readString("cleanupCloudMode", "apple-intelligence"),
   cleanupCloudBaseUrl: readString("cleanupCloudBaseUrl", API_ENDPOINTS.OPENAI_BASE),
   cortiEnvironment: readString("cortiEnvironment", "us"),
   cortiTenant: readString("cortiTenant", "base"),
@@ -988,9 +988,9 @@ export const useSettingsStore = create<SettingsState>()((set, get) => ({
   isSignedIn: readBoolean("isSignedIn", false),
 
   transcriptionMode: (() => {
-    const v = readString("transcriptionMode", "openwhispr");
-    if (v === "openwhispr" || v === "providers" || v === "local" || v === "self-hosted") return v;
-    return "openwhispr" as InferenceMode;
+    const v = readString("transcriptionMode", "apple-intelligence");
+    if (v === "apple-intelligence" || v === "providers" || v === "local" || v === "self-hosted") return v;
+    return "apple-intelligence" as InferenceMode;
   })(),
   remoteTranscriptionType: (() => {
     const v = readString("remoteTranscriptionType", "lan");
@@ -998,23 +998,23 @@ export const useSettingsStore = create<SettingsState>()((set, get) => ({
   })(),
   remoteTranscriptionUrl: readString("remoteTranscriptionUrl", ""),
   cleanupMode: (() => {
-    const v = readString("cleanupMode", "openwhispr");
+    const v = readString("cleanupMode", "apple-intelligence");
     if (
-      v === "openwhispr" ||
+      v === "apple-intelligence" ||
       v === "providers" ||
       v === "local" ||
       v === "self-hosted" ||
       v === "enterprise"
     )
       return v;
-    return "openwhispr" as InferenceMode;
+    return "apple-intelligence" as InferenceMode;
   })(),
   cleanupRemoteUrl: readString("cleanupRemoteUrl", ""),
 
   meetingTranscriptionMode: (() => {
-    const v = readString("meetingTranscriptionMode", "openwhispr");
-    if (v === "openwhispr" || v === "providers" || v === "local" || v === "self-hosted") return v;
-    return "openwhispr" as InferenceMode;
+    const v = readString("meetingTranscriptionMode", "apple-intelligence");
+    if (v === "apple-intelligence" || v === "providers" || v === "local" || v === "self-hosted") return v;
+    return "apple-intelligence" as InferenceMode;
   })(),
   meetingUseLocalWhisper: readBoolean("meetingUseLocalWhisper", false),
   meetingWhisperModel: readString("meetingWhisperModel", ""),
@@ -1034,9 +1034,9 @@ export const useSettingsStore = create<SettingsState>()((set, get) => ({
   meetingRemoteTranscriptionUrl: readString("meetingRemoteTranscriptionUrl", ""),
 
   uploadTranscriptionMode: (() => {
-    const v = readString("uploadTranscriptionMode", "openwhispr");
-    if (v === "openwhispr" || v === "providers" || v === "local" || v === "self-hosted") return v;
-    return "openwhispr" as InferenceMode;
+    const v = readString("uploadTranscriptionMode", "apple-intelligence");
+    if (v === "apple-intelligence" || v === "providers" || v === "local" || v === "self-hosted") return v;
+    return "apple-intelligence" as InferenceMode;
   })(),
   uploadUseLocalWhisper: readBoolean("uploadUseLocalWhisper", false),
   uploadWhisperModel: readString("uploadWhisperModel", ""),
@@ -1051,16 +1051,16 @@ export const useSettingsStore = create<SettingsState>()((set, get) => ({
   uploadCloudTranscriptionMode: readString("uploadCloudTranscriptionMode", ""),
 
   noteFormattingMode: (() => {
-    const v = readString("noteFormattingMode", "openwhispr");
+    const v = readString("noteFormattingMode", "apple-intelligence");
     if (
-      v === "openwhispr" ||
+      v === "apple-intelligence" ||
       v === "providers" ||
       v === "local" ||
       v === "self-hosted" ||
       v === "enterprise"
     )
       return v;
-    return "openwhispr" as InferenceMode;
+    return "apple-intelligence" as InferenceMode;
   })(),
   noteFormattingProvider: readString("noteFormattingProvider", ""),
   noteFormattingModel: readString("noteFormattingModel", ""),
@@ -1122,38 +1122,38 @@ export const useSettingsStore = create<SettingsState>()((set, get) => ({
   chatAgentModel: readString("chatAgentModel", "openai/gpt-oss-120b"),
   chatAgentProvider: readString("chatAgentProvider", "groq"),
   chatAgentKey: readString("chatAgentKey", ""),
-  chatAgentCloudMode: readString("chatAgentCloudMode", "openwhispr"),
+  chatAgentCloudMode: readString("chatAgentCloudMode", "apple-intelligence"),
   chatAgentMode: (() => {
-    const v = readString("chatAgentMode", "openwhispr");
+    const v = readString("chatAgentMode", "apple-intelligence");
     if (
-      v === "openwhispr" ||
+      v === "apple-intelligence" ||
       v === "providers" ||
       v === "local" ||
       v === "self-hosted" ||
       v === "enterprise"
     )
       return v;
-    return "openwhispr" as InferenceMode;
+    return "apple-intelligence" as InferenceMode;
   })(),
   chatAgentRemoteUrl: readString("chatAgentRemoteUrl", ""),
   chatAgentCloudBaseUrl: readString("chatAgentCloudBaseUrl", ""),
   chatAgentCustomApiKey: readString("chatAgentCustomApiKey", ""),
 
   dictationAgentMode: (() => {
-    const v = readString("dictationAgentMode", "openwhispr");
+    const v = readString("dictationAgentMode", "apple-intelligence");
     if (
-      v === "openwhispr" ||
+      v === "apple-intelligence" ||
       v === "providers" ||
       v === "local" ||
       v === "self-hosted" ||
       v === "enterprise"
     )
       return v;
-    return "openwhispr" as InferenceMode;
+    return "apple-intelligence" as InferenceMode;
   })(),
   dictationAgentProvider: readString("dictationAgentProvider", ""),
   dictationAgentModel: readString("dictationAgentModel", ""),
-  dictationAgentCloudMode: readString("dictationAgentCloudMode", "openwhispr"),
+  dictationAgentCloudMode: readString("dictationAgentCloudMode", "apple-intelligence"),
   dictationAgentCloudBaseUrl: readString("dictationAgentCloudBaseUrl", ""),
   dictationAgentRemoteUrl: readString("dictationAgentRemoteUrl", ""),
   dictationAgentCustomApiKey: readString("dictationAgentCustomApiKey", ""),
@@ -1645,7 +1645,7 @@ export const useSettingsStore = create<SettingsState>()((set, get) => ({
       cloudTranscriptionModel,
     } = useSettingsStore.getState();
     // Each Settings tab selects on its InferenceMode field, so set it for every
-    // scope — otherwise the UI keeps showing the previous mode (e.g. OpenWhispr
+    // scope — otherwise the UI keeps showing the previous mode (e.g. Apple Intelligence
     // Cloud) even though the cloud routing now points at the new provider.
     const mode = deriveTranscriptionMode(
       useLocalWhisper,
@@ -1706,24 +1706,24 @@ export const useSettingsStore = create<SettingsState>()((set, get) => ({
 // --- Selectors (derived state, not stored) ---
 
 export const selectIsCloudCleanupMode = (state: SettingsState) =>
-  state.isSignedIn && state.cleanupMode === "openwhispr" && state.cleanupCloudMode === "openwhispr";
+  state.isSignedIn && state.cleanupMode === "apple-intelligence" && state.cleanupCloudMode === "apple-intelligence";
 
 export const selectEffectiveCleanupProvider = (state: SettingsState) =>
-  selectIsCloudCleanupMode(state) ? "openwhispr" : state.cleanupProvider;
+  selectIsCloudCleanupMode(state) ? "apple-intelligence" : state.cleanupProvider;
 
 export const selectIsCloudChatAgentMode = (state: SettingsState) =>
   state.isSignedIn &&
-  state.chatAgentMode === "openwhispr" &&
-  state.chatAgentCloudMode === "openwhispr";
+  state.chatAgentMode === "apple-intelligence" &&
+  state.chatAgentCloudMode === "apple-intelligence";
 
 export const selectIsCloudDictationAgentMode = (state: SettingsState) =>
   state.isSignedIn &&
-  state.dictationAgentMode === "openwhispr" &&
-  state.dictationAgentCloudMode === "openwhispr";
+  state.dictationAgentMode === "apple-intelligence" &&
+  state.dictationAgentCloudMode === "apple-intelligence";
 
 export const selectIsCloudNoteFormattingMode = (state: SettingsState) => {
   const cfg = selectResolvedNoteFormatting(state);
-  return state.isSignedIn && cfg.mode === "openwhispr" && cfg.cloudMode === "openwhispr";
+  return state.isSignedIn && cfg.mode === "apple-intelligence" && cfg.cloudMode === "apple-intelligence";
 };
 
 export interface ResolvedMeetingTranscription {

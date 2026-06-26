@@ -5,11 +5,11 @@
 }:
 
 let
-  pname = "openwhispr";
+  pname = "apple-intelligence";
   version = "1.7.2";
 
   src = fetchurl {
-    url = "https://github.com/OpenWhispr/openwhispr/releases/download/v${version}/OpenWhispr-${version}-linux-x86_64.AppImage";
+    url = "https://github.com/Apple Intelligence/apple-intelligence/releases/download/v${version}/Apple Intelligence-${version}-linux-x86_64.AppImage";
     hash = "sha256-EPJTZFtd2bQ026KNcI/FOHfoAMu96HKfJxTPceTc5jw=";
   };
 
@@ -40,7 +40,7 @@ appimageTools.wrapType2 {
   ];
 
   extraInstallCommands = ''
-    install -Dm444 ${appimageContents}/open-whispr.desktop \
+    install -Dm444 ${appimageContents}/apple-intelligence.desktop \
       $out/share/applications/${pname}.desktop
 
     substituteInPlace $out/share/applications/${pname}.desktop \
@@ -51,8 +51,8 @@ appimageTools.wrapType2 {
 
   meta = {
     description = "Privacy-first desktop voice dictation, meeting transcription & notes";
-    homepage = "https://openwhispr.com/";
-    changelog = "https://github.com/OpenWhispr/openwhispr/releases/tag/v${version}";
+    homepage = "https://apple-intelligence.com/";
+    changelog = "https://github.com/Apple Intelligence/apple-intelligence/releases/tag/v${version}";
     license = lib.licenses.mit;
     sourceProvenance = with lib.sourceTypes; [ binaryNativeCode ];
     platforms = [ "x86_64-linux" ];

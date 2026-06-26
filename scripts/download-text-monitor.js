@@ -16,7 +16,7 @@ const {
   setExecutable,
 } = require("./lib/download-utils");
 
-const REPO = "OpenWhispr/openwhispr";
+const REPO = "Apple Intelligence/apple-intelligence";
 const BIN_DIR = path.join(__dirname, "..", "resources", "bin");
 
 const PLATFORM_CONFIG = {

@@ -1,11 +1,11 @@
 ---
-name: openwhispr-api
-description: Use this skill when building integrations with the OpenWhispr REST API, calling OpenWhispr endpoints, managing notes/folders/transcriptions programmatically, or connecting to the OpenWhispr MCP server. Covers authentication, all V1 endpoints, pagination, rate limits, error handling, and the remote MCP server.
+name: apple-intelligence-api
+description: Use this skill when building integrations with the Apple Intelligence REST API, calling Apple Intelligence endpoints, managing notes/folders/transcriptions programmatically, or connecting to the Apple Intelligence MCP server. Covers authentication, all V1 endpoints, pagination, rate limits, error handling, and the remote MCP server.
 ---
 
-# OpenWhispr API v1
+# Apple Intelligence API v1
 
-Use this reference when making requests to the OpenWhispr REST API. All endpoints are under the V1 path and require API key authentication.
+Use this reference when making requests to the Apple Intelligence REST API. All endpoints are under the V1 path and require API key authentication.
 
 ## Authentication
 
@@ -15,7 +15,7 @@ Pass the API key as a Bearer token in the `Authorization` header on every reques
 Authorization: Bearer owk_live_YOUR_KEY
 ```
 
-Generate keys from the OpenWhispr desktop app under **Settings > API Keys**. Keys start with `owk_live_` and are shown once at creation.
+Generate keys from the Apple Intelligence desktop app under **Settings > API Keys**. Keys start with `owk_live_` and are shown once at creation.
 
 ### Scopes
 
@@ -31,7 +31,7 @@ Each key has scoped permissions. The API rejects requests missing the required s
 ## Base URL
 
 ```
-https://api.openwhispr.com/api/v1
+https://api.apple-intelligence.com/api/v1
 ```
 
 ## Response Envelope
@@ -186,7 +186,7 @@ Scope: `usage:read`. Returns:
 For AI assistant integration (Claude, Cursor, VS Code), connect to the remote MCP server at:
 
 ```
-https://mcp.openwhispr.com/mcp
+https://mcp.apple-intelligence.com/mcp
 ```
 
 Pass the API key via `Authorization: Bearer` header. All V1 endpoints are available as MCP tools. The server uses Streamable HTTP transport (stateless, no sessions).
@@ -194,7 +194,7 @@ Pass the API key via `Authorization: Bearer` header. All V1 endpoints are availa
 ### Claude Code
 
 ```bash
-claude mcp add openwhispr --transport http https://mcp.openwhispr.com/mcp \
+claude mcp add apple-intelligence --transport http https://mcp.apple-intelligence.com/mcp \
   --header "Authorization: Bearer owk_live_YOUR_KEY"
 ```
 
@@ -203,8 +203,8 @@ claude mcp add openwhispr --transport http https://mcp.openwhispr.com/mcp \
 ```json
 {
   "mcpServers": {
-    "openwhispr": {
-      "url": "https://mcp.openwhispr.com/mcp",
+    "apple-intelligence": {
+      "url": "https://mcp.apple-intelligence.com/mcp",
       "headers": { "Authorization": "Bearer owk_live_YOUR_KEY" }
     }
   }
@@ -217,7 +217,7 @@ claude mcp add openwhispr --transport http https://mcp.openwhispr.com/mcp \
 
 ```bash
 curl -H "Authorization: Bearer owk_live_YOUR_KEY" \
-  "https://api.openwhispr.com/api/v1/notes/list?limit=10"
+  "https://api.apple-intelligence.com/api/v1/notes/list?limit=10"
 ```
 
 ### Create a note in a folder
@@ -227,7 +227,7 @@ curl -X POST \
   -H "Authorization: Bearer owk_live_YOUR_KEY" \
   -H "Content-Type: application/json" \
   -d '{"content": "Remember to review PR #42", "title": "TODO", "folder_id": "UUID"}' \
-  https://api.openwhispr.com/api/v1/notes/create
+  https://api.apple-intelligence.com/api/v1/notes/create
 ```
 
 ### Search notes
@@ -237,7 +237,7 @@ curl -X POST \
   -H "Authorization: Bearer owk_live_YOUR_KEY" \
   -H "Content-Type: application/json" \
   -d '{"query": "quarterly budget discussion"}' \
-  https://api.openwhispr.com/api/v1/notes/search
+  https://api.apple-intelligence.com/api/v1/notes/search
 ```
 
 ### Paginate through all notes
@@ -246,7 +246,7 @@ curl -X POST \
 cursor=""
 while true; do
   response=$(curl -s -H "Authorization: Bearer owk_live_YOUR_KEY" \
-    "https://api.openwhispr.com/api/v1/notes/list?limit=100&cursor=${cursor}")
+    "https://api.apple-intelligence.com/api/v1/notes/list?limit=100&cursor=${cursor}")
   echo "$response" | jq '.data[]'
   has_more=$(echo "$response" | jq -r '.has_more')
   [ "$has_more" != "true" ] && break
@@ -258,5 +258,5 @@ done
 
 ```bash
 curl -H "Authorization: Bearer owk_live_YOUR_KEY" \
-  https://api.openwhispr.com/api/v1/usage
+  https://api.apple-intelligence.com/api/v1/usage
 ```

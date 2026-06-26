@@ -284,7 +284,7 @@ export default function ControlPanel({ initialSettingsSection }: ControlPanelPro
 
     cloudMigrationProcessed.current = true;
     setUseLocalWhisper(false);
-    setCloudTranscriptionMode("openwhispr");
+    setCloudTranscriptionMode("apple-intelligence");
     localStorage.removeItem("pendingCloudMigration");
     setShowCloudMigrationBanner(true);
   }, [authLoaded, isSignedIn, setUseLocalWhisper, setCloudTranscriptionMode]);

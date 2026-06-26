@@ -48,7 +48,7 @@ async function transcribeAudio({
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       encounter: {
-        identifier: `openwhispr-${crypto.randomUUID()}`,
+        identifier: `apple-intelligence-${crypto.randomUUID()}`,
         status: "completed",
         type: "consultation",
       },

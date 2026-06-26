@@ -866,7 +866,7 @@
       ]
     }
   ],
-  "openwhisprCloudModels": {
+  "apple-intelligenceCloudModels": {
     "tiers": [
       {
         "id": "fast",

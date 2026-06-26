@@ -26,6 +26,7 @@ class WindowManager {
     this.notificationWindow = null;
     this._notificationTimeout = null;
     this.transcriptionPreviewWindow = null;
+    this._siriGlowProcess = null;
     this.updateNotificationWindow = null;
     this._updateNotificationDismissed = false;
     this.notificationPrefs = {
@@ -903,6 +904,46 @@ class WindowManager {
 
     this.transcriptionPreviewWindow.setBounds(bounds);
     return { success: true, bounds };
+  }
+
+  _ensureSiriGlowHelper() {
+    if (this._siriGlowProcess && !this._siriGlowProcess.killed) return;
+
+    const { spawn } = require("child_process");
+    const helperBin = require("path").join(
+      __dirname, "..", "..", "resources", "mac",
+      "SiriGlowHelper.app", "Contents", "MacOS", "SiriGlowHelper"
+    );
+
+    this._siriGlowProcess = spawn(helperBin, [], {
+      stdio: ["pipe", "ignore", "ignore"],
+    });
+
+    this._siriGlowProcess.on("exit", () => {
+      this._siriGlowProcess = null;
+    });
+  }
+
+  async showScreenGlow() {
+    if (process.platform !== "darwin") return;
+    this._ensureSiriGlowHelper();
+    try {
+      this._siriGlowProcess?.stdin?.write("show\n");
+    } catch (_) {}
+  }
+
+  hideScreenGlow() {
+    if (!this._siriGlowProcess || this._siriGlowProcess.killed) return;
+    try {
+      this._siriGlowProcess?.stdin?.write("hide\n");
+    } catch (_) {}
+  }
+
+  stopSiriGlowHelper() {
+    if (this._siriGlowProcess && !this._siriGlowProcess.killed) {
+      this._siriGlowProcess.kill();
+      this._siriGlowProcess = null;
+    }
   }
 
   resizeAgentWindow(width, height) {

@@ -8,10 +8,10 @@ Enable verbose logging to diagnose issues like "no audio detected" or transcript
 
 ```bash
 # macOS
-/Applications/OpenWhispr.app/Contents/MacOS/OpenWhispr --log-level=debug
+/Applications/Apple Intelligence.app/Contents/MacOS/Apple Intelligence --log-level=debug
 
 # Windows
-OpenWhispr.exe --log-level=debug
+Apple Intelligence.exe --log-level=debug
 ```
 
 ### Option 2: Environment File
@@ -24,15 +24,15 @@ OPENWHISPR_LOG_LEVEL=debug
 
 **Env file locations:**
 
-- macOS: `~/Library/Application Support/OpenWhispr/.env`
-- Windows: `%APPDATA%\OpenWhispr\.env`
-- Linux: `~/.config/OpenWhispr/.env`
+- macOS: `~/Library/Application Support/Apple Intelligence/.env`
+- Windows: `%APPDATA%\Apple Intelligence\.env`
+- Linux: `~/.config/Apple Intelligence/.env`
 
 ## Log File Locations
 
-- **macOS**: `~/Library/Application Support/OpenWhispr/logs/debug-*.log`
-- **Windows**: `%APPDATA%\OpenWhispr\logs\debug-*.log`
-- **Linux**: `~/.config/OpenWhispr/logs/debug-*.log`
+- **macOS**: `~/Library/Application Support/Apple Intelligence/logs/debug-*.log`
+- **Windows**: `%APPDATA%\Apple Intelligence\logs\debug-*.log`
+- **Linux**: `~/.config/Apple Intelligence/logs/debug-*.log`
 
 ## What Gets Logged
 

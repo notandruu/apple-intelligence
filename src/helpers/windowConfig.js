@@ -228,6 +228,30 @@ class WindowPositionUtil {
   }
 }
 
+const SCREEN_GLOW_CONFIG = {
+  width: 1920,
+  height: 1080,
+  frame: false,
+  transparent: true,
+  alwaysOnTop: true,
+  skipTaskbar: true,
+  resizable: false,
+  focusable: false,
+  hasShadow: false,
+  show: false,
+  acceptsFirstMouse: false,
+  visibleOnAllWorkspaces: true,
+  fullScreenable: false,
+  type: process.platform === "darwin" ? "panel" : "normal",
+  webPreferences: {
+    preload: path.join(__dirname, "..", "..", "preload.js"),
+    nodeIntegration: false,
+    contextIsolation: true,
+    sandbox: true,
+    backgroundThrottling: false,
+  },
+};
+
 const AGENT_OVERLAY_CONFIG = {
   width: 420,
   height: 300,
@@ -265,6 +289,7 @@ module.exports = {
   NOTIFICATION_WINDOW_CONFIG,
   TRANSCRIPTION_PREVIEW_CONFIG,
   TRANSCRIPTION_PREVIEW_SIZE_LIMITS,
+  SCREEN_GLOW_CONFIG,
   WINDOW_SIZES,
   WindowPositionUtil,
 };
